@@ -24,6 +24,7 @@ namespace ElevatorProject.Model
             Status = "Created";
             Id = id;
             CurrentFloor = BirthdayFloor;
+            //CallTheElevator();
         }
 
         private Time BirthdayTime = new Time();
@@ -34,10 +35,11 @@ namespace ElevatorProject.Model
         private float Weight;
         private string Status;
 
-        public event Func<bool> Alone;
+        public event Action Alone;
         public event Func<int> CheckFloor;
         public event Action EventCloseDoor;
         public event Action<string> UpdateStatus;
+        public event Action<string> UpdateCurrentFloor;
         public event Action<int,string> UpdateElevatorList;
         public event Func<Person,int,bool> Entered;
         public event Action<Person> Transported;
@@ -54,6 +56,10 @@ namespace ElevatorProject.Model
         {
             return Status;
         }
+        public int GetCurrentFloor()
+        {
+            return CurrentFloor;
+        }
         public void setStatus(string status)
         {
             Status = status;
@@ -66,16 +72,16 @@ namespace ElevatorProject.Model
         public void CallTheElevator()
         {
             Status = "Called the elevator";
-            this.UpdateStatus?.Invoke(Status);
-            UpdateElevatorList?.Invoke(BirthdayFloor,Status);
+            this.UpdateStatus?.Invoke(Status);                //подписана SimulationForm (setPersonStatus)
+            UpdateElevatorList?.Invoke(BirthdayFloor,Status); //подписан лифт (updateElevatorList)
         }
         public void EnterTheElevator(int floor)
         {
             if(CurrentFloor==floor && Status == "Called the elevator")
             {
                 Status = "Entered the elevator";
-                UpdateStatus?.Invoke(Status);
-                if (!Entered(this, DestinationFloor))
+                UpdateStatus?.Invoke(Status);         //подписана SimulationForm (setPersonStatus)
+                if (!Entered(this, DestinationFloor)) //подписан лифт (AddTime)
                     ChooseFloor();
                 Check();
             }
@@ -83,40 +89,49 @@ namespace ElevatorProject.Model
         }
         private void Check()
         {
-            if (!Alone.Invoke())
+            DataBase.isEmpty = false;
+            Alone?.Invoke(); //подписаны все люди, кроме вызывающего ()
+            if (DataBase.isEmpty)
                 CloseDoor();
         }
-        public bool Answer()
+        public void Answer()
         {
-            return CurrentFloor == CheckFloor?.Invoke() && Status == "Called the elevator";
+            if (CurrentFloor == CheckFloor?.Invoke() && Status == "Called the elevator") //подписан лифт (getCurrentFloor)
+                DataBase.isEmpty = true;
         }
         private void ChooseFloor()
         {
             Status = "Chose floor";
-            UpdateStatus?.Invoke(Status);
-            UpdateElevatorList?.Invoke(DestinationFloor,Status);
+            UpdateStatus?.Invoke(Status);                           //подписана SimulationForm (setPersonStatus)
+            UpdateElevatorList?.Invoke(DestinationFloor,Status);    //подписан лифт (updateElevatorList)
             //задержка
         }
         private void CloseDoor()
         {
             Status = "Closed the doors";
-            UpdateStatus?.Invoke(Status);
+            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setPersonStatus)
             //задержка
             //лифт закрывает двери
-            EventCloseDoor?.Invoke();
+            EventCloseDoor?.Invoke();       //подписан лифт (CloseDoors)
         }
         public void GetOffTheElevator(int floor)
         {
-            if(DestinationFloor == floor && Status == "Entered the elevator" || Status == "Closed the doors")
+            if(DestinationFloor == floor && (Status == "Moving up" || Status == "Moving down"))
             {
                 Status = "Ger off the elevator";
-                UpdateStatus?.Invoke(Status);
-                Transported?.Invoke(this);
+                UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setPersonStatus)
+                Transported?.Invoke(this);      //подписан лифт (Transported)
             }
         }
         public void Addfloor()
         {
             CurrentFloor -= DataBase.direction;
+            if(DataBase.CurrentId==Id)
+                UpdateCurrentFloor?.Invoke(CurrentFloor.ToString());
+            if (DataBase.direction == -1)
+                Status = "Moving up";
+            else
+                Status = "Moving down";
         }
     }
 

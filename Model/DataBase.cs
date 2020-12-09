@@ -19,5 +19,6 @@ namespace ElevatorProject.Model
         public static Time time = new Time();
         public static int id;
         public static int CurrentId;
+        public static bool isEmpty;
     }
 }

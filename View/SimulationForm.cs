@@ -38,12 +38,14 @@ namespace ElevatorProject.View
                 Person person = new Person(i);
                 PersonList.Add(person);
                 person.UpdateStatus += setPersonStatus;
+                person.UpdateCurrentFloor += setPersonFloor;
                 person.UpdateElevatorList += elevator.updateElevatorList;
                 person.Entered += elevator.AddTime;
                 person.Transported += elevator.Transported;
                 person.CheckFloor += elevator.getCurrentFloor;
                 person.EventCloseDoor += elevator.CloseDoors;
-                person.Alone += person.Answer;
+                for (int j = 0; j < PersonList.Count - 1; j++)
+                    person.Alone += PersonList[j].Answer;
                 elevator.EventOpenDoors += person.EnterTheElevator;
                 elevator.EventOpenDoors += person.GetOffTheElevator;
                 person.CallTheElevator();
@@ -55,7 +57,10 @@ namespace ElevatorProject.View
         {
             StatusBox.Text = status;
         }
-
+        private void setPersonFloor(string status)
+        {
+            CurrentFloorPersonBox.Text = status;
+        }
         private void CloseButton_MouseEnter(object sender, EventArgs e)
         {
             CloseButton.BackColor = Color.Red;
@@ -297,12 +302,14 @@ namespace ElevatorProject.View
             {
                 NameBox.Text = "Person " + PersonList[i].GetId().ToString(); 
                 StatusBox.Text = PersonList[i].GetStatus();
+                CurrentFloorPersonBox.Text = PersonList[i].GetCurrentFloor().ToString();
                 LifetimeBox.Text = "00:00:00:0";
             }     
               else
             {
                 NameBox.Text = "-";
                 StatusBox.Text = "-";
+                CurrentFloorPersonBox.Text = "-";
                 LifetimeBox.Text = "-";
             }               
         }
