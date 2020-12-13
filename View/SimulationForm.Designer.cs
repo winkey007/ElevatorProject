@@ -56,7 +56,9 @@
             this.HeaderName = new System.Windows.Forms.Label();
             this.Logo = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.LifetimeBox = new System.Windows.Forms.TextBox();
             this.CurrentFloorPersonBox = new System.Windows.Forms.TextBox();
+            this.LifetimeLabel = new System.Windows.Forms.Label();
             this.StatusBox = new System.Windows.Forms.TextBox();
             this.NameBox = new System.Windows.Forms.TextBox();
             this.CurrentFloorLabel = new System.Windows.Forms.Label();
@@ -65,12 +67,9 @@
             this.PersonStatusLabel = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.start = new System.Windows.Forms.Timer(this.components);
-            this.floortime = new System.Windows.Forms.Timer(this.components);
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.rightButton = new System.Windows.Forms.PictureBox();
             this.LeftButton = new System.Windows.Forms.PictureBox();
-            this.LifetimeBox = new System.Windows.Forms.TextBox();
-            this.LifetimeLabel = new System.Windows.Forms.Label();
             this.StatusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StopStatusPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadStatusPic)).BeginInit();
@@ -434,6 +433,18 @@
             this.panel1.Size = new System.Drawing.Size(477, 217);
             this.panel1.TabIndex = 16;
             // 
+            // LifetimeBox
+            // 
+            this.LifetimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.LifetimeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.LifetimeBox.Location = new System.Drawing.Point(270, 172);
+            this.LifetimeBox.Multiline = true;
+            this.LifetimeBox.Name = "LifetimeBox";
+            this.LifetimeBox.ReadOnly = true;
+            this.LifetimeBox.Size = new System.Drawing.Size(188, 34);
+            this.LifetimeBox.TabIndex = 51;
+            this.LifetimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // CurrentFloorPersonBox
             // 
             this.CurrentFloorPersonBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
@@ -445,6 +456,16 @@
             this.CurrentFloorPersonBox.Size = new System.Drawing.Size(188, 34);
             this.CurrentFloorPersonBox.TabIndex = 49;
             this.CurrentFloorPersonBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LifetimeLabel
+            // 
+            this.LifetimeLabel.AutoSize = true;
+            this.LifetimeLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LifetimeLabel.Location = new System.Drawing.Point(3, 172);
+            this.LifetimeLabel.Name = "LifetimeLabel";
+            this.LifetimeLabel.Size = new System.Drawing.Size(124, 34);
+            this.LifetimeLabel.TabIndex = 50;
+            this.LifetimeLabel.Text = "Lifetime";
             // 
             // StatusBox
             // 
@@ -520,10 +541,6 @@
             this.start.Interval = 1000;
             this.start.Tick += new System.EventHandler(this.start_Tick);
             // 
-            // floortime
-            // 
-            this.floortime.Tick += new System.EventHandler(this.floortime_Tick);
-            // 
             // ErrorLabel
             // 
             this.ErrorLabel.AutoSize = true;
@@ -559,28 +576,6 @@
             this.LeftButton.TabStop = false;
             this.LeftButton.Click += new System.EventHandler(this.LeftButton_Click);
             // 
-            // LifetimeBox
-            // 
-            this.LifetimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
-            this.LifetimeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LifetimeBox.Location = new System.Drawing.Point(270, 172);
-            this.LifetimeBox.Multiline = true;
-            this.LifetimeBox.Name = "LifetimeBox";
-            this.LifetimeBox.ReadOnly = true;
-            this.LifetimeBox.Size = new System.Drawing.Size(188, 34);
-            this.LifetimeBox.TabIndex = 51;
-            this.LifetimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LifetimeLabel
-            // 
-            this.LifetimeLabel.AutoSize = true;
-            this.LifetimeLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LifetimeLabel.Location = new System.Drawing.Point(3, 172);
-            this.LifetimeLabel.Name = "LifetimeLabel";
-            this.LifetimeLabel.Size = new System.Drawing.Size(124, 34);
-            this.LifetimeLabel.TabIndex = 50;
-            this.LifetimeLabel.Text = "Lifetime";
-            // 
             // SimulationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
@@ -609,6 +604,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Elevator";
+            this.Shown += new System.EventHandler(this.SimulationForm_Shown);
             this.StatusBar.ResumeLayout(false);
             this.StatusBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StopStatusPic)).EndInit();
@@ -674,7 +670,6 @@
         private System.Windows.Forms.PictureBox OpenStatusPic;
         private System.Windows.Forms.PictureBox CheckStatusPic;
         private System.Windows.Forms.PictureBox CallStatusPic;
-        private System.Windows.Forms.Timer floortime;
         private System.Windows.Forms.Label ErrorLabel;
         private System.Windows.Forms.TextBox LifetimeBox;
         private System.Windows.Forms.Label LifetimeLabel;

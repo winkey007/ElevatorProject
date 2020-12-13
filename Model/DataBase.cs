@@ -10,7 +10,7 @@ namespace ElevatorProject.Model
     {
         public static int NumPersons;
         public static int NumFloors;
-        public const int PathLength = 500;
+        public const int PathLength = 590;
         public static int FloorLength;
         public static int direction;
         public const int HeightFloor = 25;

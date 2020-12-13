@@ -60,7 +60,7 @@ namespace ElevatorProject.Model
         {
             return CurrentFloor;
         }
-        public void setStatus(string status)
+        public void SetStatus(string status)
         {
             Status = status;
         }
@@ -72,26 +72,26 @@ namespace ElevatorProject.Model
         public void CallTheElevator()
         {
             Status = "Called the elevator";
-            this.UpdateStatus?.Invoke(Status);                //подписана SimulationForm (setPersonStatus)
+            UpdateStatus?.Invoke(Status);                //подписана SimulationForm (setPersonStatus)
             UpdateElevatorList?.Invoke(BirthdayFloor,Status); //подписан лифт (updateElevatorList)
         }
         public void EnterTheElevator(int floor)
         {
-            if(CurrentFloor==floor && Status == "Called the elevator")
+            if(CurrentFloor == floor && Status == "Called the elevator")
             {
                 Status = "Entered the elevator";
                 UpdateStatus?.Invoke(Status);         //подписана SimulationForm (setPersonStatus)
+                Thread.Sleep(3000);
                 if (!Entered(this, DestinationFloor)) //подписан лифт (AddTime)
                     ChooseFloor();
                 Check();
             }
-            //задержка
         }
         private void Check()
         {
             DataBase.isEmpty = false;
-            Alone?.Invoke(); //подписаны все люди, кроме вызывающего ()
-            if (DataBase.isEmpty)
+            Alone?.Invoke(); //подписаны все люди, кроме вызывающего (Answer)
+            if (!DataBase.isEmpty)
                 CloseDoor();
         }
         public void Answer()
@@ -103,6 +103,7 @@ namespace ElevatorProject.Model
         {
             Status = "Chose floor";
             UpdateStatus?.Invoke(Status);                           //подписана SimulationForm (setPersonStatus)
+            Thread.Sleep(2000);
             UpdateElevatorList?.Invoke(DestinationFloor,Status);    //подписан лифт (updateElevatorList)
             //задержка
         }
@@ -110,8 +111,7 @@ namespace ElevatorProject.Model
         {
             Status = "Closed the doors";
             UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setPersonStatus)
-            //задержка
-            //лифт закрывает двери
+            Thread.Sleep(2000);
             EventCloseDoor?.Invoke();       //подписан лифт (CloseDoors)
         }
         public void GetOffTheElevator(int floor)
@@ -123,15 +123,21 @@ namespace ElevatorProject.Model
                 Transported?.Invoke(this);      //подписан лифт (Transported)
             }
         }
-        public void Addfloor()
+        public void UpdateStatusFromElevator()
         {
-            CurrentFloor -= DataBase.direction;
-            if(DataBase.CurrentId==Id)
-                UpdateCurrentFloor?.Invoke(CurrentFloor.ToString());
             if (DataBase.direction == -1)
                 Status = "Moving up";
             else
                 Status = "Moving down";
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status);
+        }
+
+        public void Addfloor()
+        {
+            CurrentFloor -= DataBase.direction;
+            if (DataBase.CurrentId == Id)
+                UpdateCurrentFloor?.Invoke(CurrentFloor.ToString());
         }
     }
 

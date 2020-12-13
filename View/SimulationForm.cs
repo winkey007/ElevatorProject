@@ -14,27 +14,18 @@ namespace ElevatorProject.View
 {
     public partial class SimulationForm : Form
     {
-        Elevator elevator = new Elevator();
+        private Elevator elevator;
         List<Person> PersonList = new List<Person>();
         public SimulationForm()
         {
             InitializeComponent();
-            elevator.MoveFloor += moveFloor;
-            elevator.UpdateStatus += setElevatorStatus;
-            elevator.UpdateTransported += setNumTransported;
-            DataBase.CurrentId = 0; DataBase.id = 0; DataBase.time.setSec(0); DataBase.time.setMs(0); DataBase.time.setMin(0); DataBase.time.setH(0);
-            CreatePersons(DataBase.NumPersons);   
-            ShowPeople(DataBase.CurrentId);
-            CurrentFloorBox.Text = elevator.getCurrentFloor().ToString();
-            TimeBox.Text = "0" + DataBase.time.getH().ToString() + ":" + "0" + DataBase.time.getMin().ToString() + ":" + "0" + DataBase.time.getSec().ToString() + ":" + DataBase.time.getMs().ToString(); ;
-            TransportedBox.Text = elevator.getTransported().ToString();
-            ElevatorBox.Text = elevator.getStatus();
+            elevator = new Elevator();
         }
 
         private void CreatePersons(int Num)
-          {
-              for (int i = DataBase.NumPersons - Num; i < DataBase.NumPersons; i++)
-              {
+        {
+            for (int i = DataBase.NumPersons - Num; i < DataBase.NumPersons; i++)
+            {
                 Person person = new Person(i);
                 PersonList.Add(person);
                 person.UpdateStatus += setPersonStatus;
@@ -45,21 +36,28 @@ namespace ElevatorProject.View
                 person.CheckFloor += elevator.getCurrentFloor;
                 person.EventCloseDoor += elevator.CloseDoors;
                 for (int j = 0; j < PersonList.Count - 1; j++)
+                {
                     person.Alone += PersonList[j].Answer;
+                    PersonList[j].Alone += person.Answer;
+                }
                 elevator.EventOpenDoors += person.EnterTheElevator;
-                elevator.EventOpenDoors += person.GetOffTheElevator;
-                person.CallTheElevator();
-                //Thread thread = new Thread(person.CallTheElevator);
-                //thread.Start();
+               // elevator.EventOpenDoors += person.GetOffTheElevator;
+
+                var task = new Task(() => person.CallTheElevator());
+                task.Start();
             }
-          }
+        }
         private void setPersonStatus(string status)
         {
-            StatusBox.Text = status;
+            StatusBox.Invoke((MethodInvoker)(() => {
+                StatusBox.Text = status;
+            }));
         }
         private void setPersonFloor(string status)
         {
-            CurrentFloorPersonBox.Text = status;
+            StatusBox.Invoke((MethodInvoker)(() => {
+                CurrentFloorPersonBox.Text = status;
+            }));
         }
         private void CloseButton_MouseEnter(object sender, EventArgs e)
         {
@@ -101,8 +99,6 @@ namespace ElevatorProject.View
             lastPoint = new Point(e.X, e.Y);
         }
 
-
-
         private void FinishButton_Click(object sender, EventArgs e)
         {
             if (elevator.getStatus() == "Standby mode" || elevator.getStatus() == "Go emty to call")
@@ -121,44 +117,46 @@ namespace ElevatorProject.View
         }
         public void setElevatorStatus(string Status)
         {
-            ElevatorBox.Text = Status;
-            switch (Status)
-            {
-                case "Go emty to call":
-                    WaitStatusPic.Visible = false;
-                    CallStatusPic.Visible = true;
-                    break;
-                case "Stand":
-                    CallStatusPic.Visible = false;
-                    StopStatusPic.Visible = true;
-                    break;
-                case "Open doors":
-                    StopStatusPic.Visible = false;
-                    OpenStatusPic.Visible = true;
-                    break;
-                case "Check mode":
-                    OpenStatusPic.Visible = false;
-                    CheckStatusPic.Visible = true;
-                    break;
-                case "Close doors":
-                    CheckStatusPic.Visible = false;
-                    CloseStatusPic.Visible = true;
-                    break;
-                case "Carry up":
-                    CloseStatusPic.Visible = false;
-                    UpStatusPic.Visible = true;
-                    break;
-                case "Carry down":
-                    CloseStatusPic.Visible = false;
-                    DownStatusPic.Visible = true;
-                    break;
-                case "Standby mode":
-                    CloseStatusPic.Visible = false;
-                    WaitStatusPic.Visible = true;
-                    break;
-                default:
-                    break;
-            }
+            StatusBox.Invoke((MethodInvoker)(() => {
+                ElevatorBox.Text = Status;
+            }));
+            //switch (Status)
+            //{
+            //    case "Go emty to call":
+            //        WaitStatusPic.Visible = false;
+            //        CallStatusPic.Visible = true;
+            //        break;
+            //    case "Stand":
+            //        CallStatusPic.Visible = false;
+            //        StopStatusPic.Visible = true;
+            //        break;
+            //    case "Open doors":
+            //        StopStatusPic.Visible = false;
+            //        OpenStatusPic.Visible = true;
+            //        break;
+            //    case "Check mode":
+            //        OpenStatusPic.Visible = false;
+            //        CheckStatusPic.Visible = true;
+            //        break;
+            //    case "Close doors":
+            //        CheckStatusPic.Visible = false;
+            //        CloseStatusPic.Visible = true;
+            //        break;
+            //    case "Carry up":
+            //        CloseStatusPic.Visible = false;
+            //        UpStatusPic.Visible = true;
+            //        break;
+            //    case "Carry down":
+            //        CloseStatusPic.Visible = false;
+            //        DownStatusPic.Visible = true;
+            //        break;
+            //    case "Standby mode":
+            //        CloseStatusPic.Visible = false;
+            //        WaitStatusPic.Visible = true;
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
         private void start_Tick(object sender, EventArgs e)
         {
@@ -169,28 +167,14 @@ namespace ElevatorProject.View
         public void moveFloor()
         {
             DataBase.CurrentHeight = DataBase.HeightFloor;
-            DataBase.FloorLength = DataBase.PathLength / DataBase.NumFloors;
-            floortime.Enabled = true;
-        }
-        private void floortime_Tick(object sender, EventArgs e)
-        {
-            CurrentFloorBox.Location = new Point(CurrentFloorBox.Location.X, CurrentFloorBox.Location.Y + DataBase.direction * DataBase.FloorLength / DataBase.HeightFloor);
-            ElevatorPic.Location = new Point(ElevatorPic.Location.X, ElevatorPic.Location.Y + DataBase.direction * DataBase.FloorLength / DataBase.HeightFloor);
-            DataBase.CurrentHeight--;
-            if (DataBase.CurrentHeight == 0)
-            {
-                floortime.Enabled = false;
-                CurrentFloorBox.Text = (Convert.ToInt32(CurrentFloorBox.Text) - DataBase.direction).ToString();
-            }
-
         }
 
         private void rightButton_Click(object sender, EventArgs e)
         {
             DataBase.CurrentId++;
             ShowPeople(DataBase.CurrentId);
-           /* DataBase.direction = -1;
-            moveFloor();*/
+            /* DataBase.direction = -1;
+             moveFloor();*/
         }
         private void LeftButton_Click(object sender, EventArgs e)
         {
@@ -201,7 +185,9 @@ namespace ElevatorProject.View
         }
         public void setNumTransported()
         {
-            TransportedBox.Text = elevator.getTransported().ToString();
+            TransportedBox.Invoke((MethodInvoker)(() => {
+                TransportedBox.Text = elevator.getTransported().ToString();
+            }));
         }
         private void CreateButton_Click(object sender, EventArgs e)
         {
@@ -210,9 +196,20 @@ namespace ElevatorProject.View
         }
         private void timer_Tick(object sender, EventArgs e)
         {
-            DataBase.time.setMs(DataBase.time.getMs()+1);
+            if (DataBase.CurrentHeight > 0)
+            {
+                CurrentFloorBox.Location = new Point(CurrentFloorBox.Location.X, CurrentFloorBox.Location.Y + DataBase.direction * DataBase.FloorLength / DataBase.HeightFloor);
+                ElevatorPic.Location = new Point(ElevatorPic.Location.X, ElevatorPic.Location.Y + DataBase.direction * DataBase.FloorLength / DataBase.HeightFloor);
+                DataBase.CurrentHeight--;
+            }
+            else if (DataBase.CurrentHeight == 0)
+            {
+                CurrentFloorBox.Text = (Convert.ToInt32(CurrentFloorBox.Text) - DataBase.direction).ToString();
+                DataBase.CurrentHeight--;
+            }
+            DataBase.time.setMs(DataBase.time.getMs() + 1);
             TimeBox.Text = ShowTime(DataBase.time);
-            if(PersonList.Any())
+            if (PersonList.Any())
             {
                 Time time = DataBase.time - PersonList[DataBase.CurrentId].GetBirthdayTime();
                 LifetimeBox.Text = ShowTime(time);
@@ -298,21 +295,36 @@ namespace ElevatorProject.View
                 i = 0;
                 DataBase.CurrentId = i;
             }
-             if (PersonList.Count != 0)
+            if (PersonList.Count != 0)
             {
-                NameBox.Text = "Person " + PersonList[i].GetId().ToString(); 
+                NameBox.Text = "Person " + PersonList[i].GetId().ToString();
                 StatusBox.Text = PersonList[i].GetStatus();
                 CurrentFloorPersonBox.Text = PersonList[i].GetCurrentFloor().ToString();
                 LifetimeBox.Text = "00:00:00:0";
-            }     
-              else
+            }
+            else
             {
                 NameBox.Text = "-";
                 StatusBox.Text = "-";
                 CurrentFloorPersonBox.Text = "-";
                 LifetimeBox.Text = "-";
-            }               
+            }
         }
 
+        private void SimulationForm_Shown(object sender, EventArgs e)
+        {
+            DataBase.CurrentHeight = -1;
+            DataBase.FloorLength = DataBase.PathLength / DataBase.NumFloors;
+            elevator.MoveFloor += moveFloor;
+            elevator.UpdateStatus += setElevatorStatus;
+            elevator.UpdateTransported += setNumTransported;
+            DataBase.CurrentId = 0; DataBase.id = 0; DataBase.time.setSec(0); DataBase.time.setMs(0); DataBase.time.setMin(0); DataBase.time.setH(0);
+            CreatePersons(DataBase.NumPersons);
+            ShowPeople(DataBase.CurrentId);
+            CurrentFloorBox.Text = elevator.getCurrentFloor().ToString();
+            TimeBox.Text = "0" + DataBase.time.getH().ToString() + ":" + "0" + DataBase.time.getMin().ToString() + ":" + "0" + DataBase.time.getSec().ToString() + ":" + DataBase.time.getMs().ToString(); ;
+            TransportedBox.Text = elevator.getTransported().ToString();
+            ElevatorBox.Text = elevator.getStatus();
+        }
     }
 }
