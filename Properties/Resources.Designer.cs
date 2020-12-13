@@ -8,10 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.CodeDom.Compiler;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Globalization;
+using System.Resources;
+using System.Runtime.CompilerServices;
+
 namespace ElevatorProject.Properties {
-    using System;
-    
-    
     /// <summary>
     ///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
     /// </summary>
@@ -19,27 +25,27 @@ namespace ElevatorProject.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [DebuggerNonUserCode()]
+    [CompilerGenerated()]
     internal class Resources {
         
-        private static global::System.Resources.ResourceManager resourceMan;
+        private static ResourceManager resourceMan;
         
-        private static global::System.Globalization.CultureInfo resourceCulture;
+        private static CultureInfo resourceCulture;
         
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
         
         /// <summary>
         ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
         /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static ResourceManager ResourceManager {
             get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ElevatorProject.Properties.Resources", typeof(Resources).Assembly);
+                if (ReferenceEquals(resourceMan, null)) {
+                    ResourceManager temp = new ResourceManager("ElevatorProject.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -50,8 +56,8 @@ namespace ElevatorProject.Properties {
         ///   Перезаписывает свойство CurrentUICulture текущего потока для всех
         ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
         /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,150 +69,150 @@ namespace ElevatorProject.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap call {
+        internal static Bitmap call {
             get {
                 object obj = ResourceManager.GetObject("call", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap check {
+        internal static Bitmap check {
             get {
                 object obj = ResourceManager.GetObject("check", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap close {
+        internal static Bitmap close {
             get {
                 object obj = ResourceManager.GetObject("close", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap down {
+        internal static Bitmap down {
             get {
                 object obj = ResourceManager.GetObject("down", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap elevator {
+        internal static Bitmap elevator {
             get {
                 object obj = ResourceManager.GetObject("elevator", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap floors {
+        internal static Bitmap floors {
             get {
                 object obj = ResourceManager.GetObject("floors", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap left {
+        internal static Bitmap left {
             get {
                 object obj = ResourceManager.GetObject("left", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap logo {
+        internal static Bitmap logo {
             get {
                 object obj = ResourceManager.GetObject("logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap open {
+        internal static Bitmap open {
             get {
                 object obj = ResourceManager.GetObject("open", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap people {
+        internal static Bitmap people {
             get {
                 object obj = ResourceManager.GetObject("people", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap right {
+        internal static Bitmap right {
             get {
                 object obj = ResourceManager.GetObject("right", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap signal {
+        internal static Bitmap signal {
             get {
                 object obj = ResourceManager.GetObject("signal", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap stop {
+        internal static Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap up {
+        internal static Bitmap up {
             get {
                 object obj = ResourceManager.GetObject("up", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wait {
+        internal static Bitmap wait {
             get {
                 object obj = ResourceManager.GetObject("wait", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
     }

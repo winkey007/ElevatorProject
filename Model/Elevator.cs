@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ElevatorProject.Model
 {
-    class Elevator
+    public class Elevator
     {
         public Elevator()
         {
@@ -19,16 +17,16 @@ namespace ElevatorProject.Model
             FloorsInTheDirection = 0;
         }
         private const float MaxWeight = 400f;
-        private float TotalWeight;
-        private float CurrentWeight;
-        private int NumIdleTransport;
-        private int NumTransported;
-        private string Status;
-        private int CurrentFloor;
-        private int FloorsInTheDirection;
+        public float TotalWeight { set; get; }
+        public float CurrentWeight { set; get; }
+        public int NumIdleTransport { set; get; }
+        public int NumTransported { set; get; }
+        public string Status { set; get; }
+        public int CurrentFloor { set; get; }
+        public int FloorsInTheDirection { set; get; }
         public List<int> ElevatorList = new List<int>();
-        private List<Person> PersonsList = new List<Person>();
-        private Time StandTime = new Time();
+        public List<Person> PersonsList = new List<Person>();
+        public Time StandTime = new Time();
 
         public event Action<string> UpdateStatus;
         public event Action MoveFloor;
@@ -37,27 +35,27 @@ namespace ElevatorProject.Model
         public event Action<int> EventOpenDoors;
         public event Action UpdateTransported;
 
-        public string getStatus()
+        public string GetStatus()
         {
             return Status;
         }
-        public int getCurrentFloor()
+        public int GetCurrentFloor()
         {
             return CurrentFloor;
         }
-        public int getTransported()
+        public int GetTransported()
         {
             return NumTransported;
         }
 
         public Result SendResult(Result result)
         {
-            result.setNumIdleTransport(NumIdleTransport);
-            result.setNumTransported(NumTransported);
-            result.setTotalWeight(TotalWeight);
+            result.NumIdleTransport = NumIdleTransport;
+            result.NumTransported = NumTransported;
+            result.TotalWeight = TotalWeight;
             return result;
         }
-        public void updateElevatorList(int floor, string status)
+        public void UpdateElevatorList(int floor, string status)
         {
             bool flag = false;
             if (!ElevatorList.Any())
@@ -80,7 +78,8 @@ namespace ElevatorProject.Model
                                 flag = true;
                                 break;
                             }
-                            else if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
+
+                            if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
                             {
                                 flag = true;
                                 break;
@@ -107,7 +106,8 @@ namespace ElevatorProject.Model
                                     flag = true;
                                     break;
                                 }
-                                else if (Math.Abs(CurrentFloor - ElevatorList[0]) == Math.Abs(CurrentFloor - floor))
+
+                                if (Math.Abs(CurrentFloor - ElevatorList[0]) == Math.Abs(CurrentFloor - floor))
                                 {
                                     flag = true;
                                     break;
@@ -124,83 +124,95 @@ namespace ElevatorProject.Model
         private void GoEmtyToCall()
         {
             Status = "Go emty to call";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
+            UpdateStatus?.Invoke(Status);
             NumIdleTransport++;
             if (ElevatorList[0] > CurrentFloor)
-                DataBase.direction = -1;
+                DataBase.Direction = -1;
             else
-                DataBase.direction = 1;
-            Thread.Sleep(1000);
+                DataBase.Direction = 1;
             while (CurrentFloor != ElevatorList[0])
             {
-                CurrentFloor -= DataBase.direction;
-                MoveFloor?.Invoke();        //подписана SimulationForm (moveFloor)
+                CurrentFloor -= DataBase.Direction;
+                MoveFloor?.Invoke();
                 Thread.Sleep(3000);
             }
             Stand();
         }
         private void Stand()
         {
-           // Thread.Sleep(1000);
             Status = "Stand";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
-            //пауза
+            UpdateStatus?.Invoke(Status);
+            Thread.Sleep(2000);
             ElevatorList.RemoveAt(0);
             OpenDoors();
         }
         private void OpenDoors()
         {
-            Thread.Sleep(1000);
             Status = "Open doors";
-            UpdateStatus?.Invoke(Status);           //подписана SimulationForm (setElevatorStatus)
-            //пауза
-            EventOpenDoors?.Invoke(CurrentFloor);   //gдписаны все люди (EnterTheElevator и GetOffTheElevator)
+            UpdateStatus?.Invoke(Status);
+            Thread.Sleep(2000);
             CheckMode();
         }
         public bool AddTime(Person person, int floor)
         {
             StandTime = StandTime + (new Time(0, 5, 0, 0));
             PersonsList.Add(person);
-            CurrentWeight += person.GetWeight();
+            CurrentWeight += person.Weight;
             CarryFloor += person.UpdateStatusFromElevator;
             EventOpenDoors += person.GetOffTheElevator;
             EventOpenDoors -= person.EnterTheElevator;
-            AddFloor += person.Addfloor;
+            AddFloor += person.AddFloor;
             return ElevatorList.Exists(x => x == floor);
         }
         private void CheckMode()
         {
-            Thread.Sleep(1000);
-            StandTime = new Time(DataBase.time);
+            DataBase.IsClosed = false;
+            StandTime = new Time(DataBase.Time);
             Time currentTime = new Time(0, 5, 0, 0);
             Status = "Check mode";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
+            UpdateStatus?.Invoke(Status);
 
-            while (DataBase.time - StandTime > currentTime)
+            EventOpenDoors?.Invoke(CurrentFloor);
+
+            if (DataBase.IsClosed && CurrentWeight >= MaxWeight)
             {
-                if (CurrentWeight >= MaxWeight)
-                    Signal();
+                DataBase.IsClosed = false;
+                Signal();
+            }
+            else if(!DataBase.IsClosed)
+            {
+                while (DataBase.Time - StandTime < currentTime)
+                {
+                    if (CurrentWeight >= MaxWeight)
+                        Signal();
+                }
             }
             CloseDoors();
         }
         private void Signal()
         {
-            //Thread.Sleep(5000);
             Status = "Signal Overload";
-            UpdateStatus?.Invoke(Status);       //подписана SimulationForm (setElevatorStatus)
+            UpdateStatus?.Invoke(Status);
+            Thread.Sleep(1000);
             while (CurrentWeight > MaxWeight)
             {
-                CurrentWeight -= PersonsList[PersonsList.Count - 1].GetWeight();
-                PersonsList[PersonsList.Count - 1].SetStatus("Called the elevator");
+                CurrentWeight -= PersonsList[PersonsList.Count - 1].Weight;
+                PersonsList[PersonsList.Count - 1].Status = "Get off the elevator";
+                Thread.Sleep(1000);
+                PersonsList[PersonsList.Count - 1].Status = "Called the elevator";
+                ElevatorList.Add(CurrentFloor);
+                CarryFloor -= PersonsList[PersonsList.Count - 1].UpdateStatusFromElevator;
+                AddFloor -= PersonsList[PersonsList.Count - 1].AddFloor;
+                EventOpenDoors -= PersonsList[PersonsList.Count - 1].GetOffTheElevator;
+                EventOpenDoors += PersonsList[PersonsList.Count - 1].EnterTheElevator;
                 PersonsList.RemoveAt(PersonsList.Count - 1);
             }
             CheckMode();
-            //последний зашедший должен выйти
         }
         public void CloseDoors()
         {
             Status = "Close doors";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
+            UpdateStatus?.Invoke(Status);
             Thread.Sleep(2000);
             if (ElevatorList.Count == 0 && CurrentWeight == 0)
                 Wait();
@@ -208,35 +220,34 @@ namespace ElevatorProject.Model
                 GoEmtyToCall();
             else if (ElevatorList[0] > CurrentFloor)
                 CarryUp();
-            else
+            else if(ElevatorList[0] < CurrentFloor)
                 CarryDown();
         }
         private void CarryUp()
         {
             Status = "Carry up";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
-            DataBase.direction = -1;
+            UpdateStatus?.Invoke(Status);
+            DataBase.Direction = -1;
             while (CurrentFloor != ElevatorList[0])
             {
-                CurrentFloor -= DataBase.direction;
-                MoveFloor?.Invoke();        //подписана SimulationForm (moveFloor)
+                CurrentFloor -= DataBase.Direction;
+                CarryFloor?.Invoke(); 
+                MoveFloor?.Invoke();       
                 Thread.Sleep(3000);
-                CarryFloor?.Invoke();       //подписаны все люди в лифте (Addfloor)
-               
+                AddFloor?.Invoke();
             }
             Stand();
         }
         private void CarryDown()
         {
-           // Thread.Sleep(5000);
             Status = "Carry down";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
-            DataBase.direction = 1;
+            UpdateStatus?.Invoke(Status);
+            DataBase.Direction = 1;
             while (CurrentFloor != ElevatorList[0])
             {
-                CurrentFloor -= DataBase.direction;
-                MoveFloor?.Invoke();        //подписана SimulationForm (moveFloor)
-                CarryFloor?.Invoke();       //подписаны все люди в лифте (Addfloor)
+                CurrentFloor -= DataBase.Direction;
+                CarryFloor?.Invoke();       
+                MoveFloor?.Invoke();        
                 Thread.Sleep(3000);
                 AddFloor?.Invoke();
             }
@@ -244,21 +255,19 @@ namespace ElevatorProject.Model
         }
         private void Wait()
         {
-            Thread.Sleep(5000);
             Status = "Standby mode";
-            UpdateStatus?.Invoke(Status);   //подписана SimulationForm (setElevatorStatus)
+            UpdateStatus?.Invoke(Status);
         }
         public void Transported(Person person)
         {
-            Thread.Sleep(5000);
             PersonsList.Remove(person);
-            CurrentWeight -= person.GetWeight();
+            CurrentWeight -= person.Weight;
             NumTransported++;
-            TotalWeight += person.GetWeight();
+            TotalWeight += person.Weight;
             CarryFloor -= person.UpdateStatusFromElevator;
-            AddFloor -= person.Addfloor;
+            AddFloor -= person.AddFloor;
             EventOpenDoors -= person.GetOffTheElevator;
-            UpdateTransported?.Invoke();    //подписана SimulationForm (setNumTransported)
+            UpdateTransported?.Invoke(); 
         }
     }
 }

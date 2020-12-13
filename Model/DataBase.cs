@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ElevatorProject.Model
+﻿namespace ElevatorProject.Model
 {
     static class DataBase
     {
@@ -12,13 +6,14 @@ namespace ElevatorProject.Model
         public static int NumFloors;
         public const int PathLength = 590;
         public static int FloorLength;
-        public static int direction;
+        public static int Direction;
         public const int HeightFloor = 25;
         public static int CurrentHeight;
         public static int TimeCurrentPerson;
-        public static Time time = new Time();
-        public static int id;
+        public static Time Time = new Time();
+        public static int Id;
         public static int CurrentId;
-        public static bool isEmpty;
+        public static bool IsEmpty;
+        public static bool IsClosed;
     }
 }

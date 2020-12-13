@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ElevatorProject.Model;
 
@@ -36,33 +30,33 @@ namespace ElevatorProject.View
             CloseButton.ForeColor = Color.Black;
         }
 
-        Point lastPoint;
+        Point _lastPoint;
         private void Header_MouseMove(object sender, MouseEventArgs e)
         {
             if(e.Button == MouseButtons.Left)
             {
-                this.Left += e.X - lastPoint.X;
-                this.Top += e.Y - lastPoint.Y;
+                Left += e.X - _lastPoint.X;
+                Top += e.Y - _lastPoint.Y;
             }
         }
 
         private void Header_MouseDown(object sender, MouseEventArgs e)
         {
-            lastPoint = new Point(e.X, e.Y);
+            _lastPoint = new Point(e.X, e.Y);
         }
 
         private void HeaderName_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.Left += e.X - lastPoint.X;
-                this.Top += e.Y - lastPoint.Y;
+                Left += e.X - _lastPoint.X;
+                Top += e.Y - _lastPoint.Y;
             }
         }
 
         private void HeaderName_MouseDown(object sender, MouseEventArgs e)
         {
-            lastPoint = new Point(e.X, e.Y);
+            _lastPoint = new Point(e.X, e.Y);
         }
 
         private void PersonsField_Enter(object sender, EventArgs e)
@@ -70,7 +64,7 @@ namespace ElevatorProject.View
             if (PersonsField.Text == "Enter the number of persons")
            {
                 PersonsField.Text = "";
-                PersonsField.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                PersonsField.Font = new Font("Microsoft Sans Serif", 15F, FontStyle.Regular, GraphicsUnit.Point, 204);
                 PersonsField.ForeColor = Color.Black;
             }
         }
@@ -80,7 +74,7 @@ namespace ElevatorProject.View
             if (FloorsField.Text == "Enter the number of floors")
             {
                 FloorsField.Text = "";
-                FloorsField.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                FloorsField.Font = new Font("Microsoft Sans Serif", 15F, FontStyle.Regular, GraphicsUnit.Point, 204);
                 FloorsField.ForeColor = Color.Black;
             }
         }
@@ -89,7 +83,7 @@ namespace ElevatorProject.View
         {
             if (PersonsField.Text == "")
             {
-                PersonsField.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                PersonsField.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 204);
                 PersonsField.ForeColor = Color.Gray;
                 PersonsField.Text = "Enter the number of persons";
             }
@@ -99,7 +93,7 @@ namespace ElevatorProject.View
         {
             if (FloorsField.Text == "")
             {
-                FloorsField.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+                FloorsField.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 204);
                 FloorsField.ForeColor = Color.Gray;
                 FloorsField.Text = "Enter the number of floors";
             }
@@ -126,7 +120,7 @@ namespace ElevatorProject.View
 
             if (flag)
             {
-                this.Hide();
+                Hide();
                 SimulationForm simulationForm = new SimulationForm();
                 simulationForm.Show();
             }

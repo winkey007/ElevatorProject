@@ -1,11 +1,14 @@
-﻿namespace ElevatorProject.View
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace ElevatorProject.View
 {
     partial class StartForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -241,18 +244,18 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel Header;
-        private System.Windows.Forms.Label CloseButton;
-        private System.Windows.Forms.PictureBox Floors;
-        private System.Windows.Forms.PictureBox People;
-        private System.Windows.Forms.Button StartButton;
-        private System.Windows.Forms.TextBox PersonsField;
-        private System.Windows.Forms.Label PersonsLabel;
-        private System.Windows.Forms.TextBox FloorsField;
-        private System.Windows.Forms.Label FloorsLabel;
-        private System.Windows.Forms.Label HeaderName;
-        private System.Windows.Forms.PictureBox Logo;
-        private System.Windows.Forms.Label PersonsErrorLabel;
-        private System.Windows.Forms.Label FloorsErrorLabel;
+        private Panel Header;
+        private Label CloseButton;
+        private PictureBox Floors;
+        private PictureBox People;
+        private Button StartButton;
+        private TextBox PersonsField;
+        private Label PersonsLabel;
+        private TextBox FloorsField;
+        private Label FloorsLabel;
+        private Label HeaderName;
+        private PictureBox Logo;
+        private Label PersonsErrorLabel;
+        private Label FloorsErrorLabel;
     }
 }

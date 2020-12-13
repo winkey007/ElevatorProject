@@ -1,4 +1,7 @@
 ﻿
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace ElevatorProject.View
 {
     partial class ResultForm
@@ -6,7 +9,7 @@ namespace ElevatorProject.View
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -289,22 +292,22 @@ namespace ElevatorProject.View
 
         #endregion
 
-        private System.Windows.Forms.Panel Header;
-        private System.Windows.Forms.Label HeaderName;
-        private System.Windows.Forms.PictureBox Logo;
-        private System.Windows.Forms.Label CloseButton;
-        private System.Windows.Forms.Button ReturnButton;
-        private System.Windows.Forms.Panel StatusBar;
-        private System.Windows.Forms.Label WeightLabel;
-        private System.Windows.Forms.Label TransportedLabel;
-        private System.Windows.Forms.Label StatusBarLabel;
-        private System.Windows.Forms.Label TimeLabel;
-        private System.Windows.Forms.Label PersonsLabel;
-        private System.Windows.Forms.Label IdleLabel;
-        private System.Windows.Forms.TextBox TransportedBox;
-        private System.Windows.Forms.TextBox PersonsBox;
-        private System.Windows.Forms.TextBox TimeBox;
-        private System.Windows.Forms.TextBox WeightBox;
-        private System.Windows.Forms.TextBox IdleBox;
+        private Panel Header;
+        private Label HeaderName;
+        private PictureBox Logo;
+        private Label CloseButton;
+        private Button ReturnButton;
+        private Panel StatusBar;
+        private Label WeightLabel;
+        private Label TransportedLabel;
+        private Label StatusBarLabel;
+        private Label TimeLabel;
+        private Label PersonsLabel;
+        private Label IdleLabel;
+        private TextBox TransportedBox;
+        private TextBox PersonsBox;
+        private TextBox TimeBox;
+        private TextBox WeightBox;
+        private TextBox IdleBox;
     }
 }
