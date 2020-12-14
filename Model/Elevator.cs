@@ -28,6 +28,7 @@ namespace ElevatorProject.Model
         public List<Person> PersonsList = new List<Person>();
         public Time StandTime = new Time();
 
+        public event Action<string> EventUpdateElevatorList;
         public event Action<string> UpdateStatus;
         public event Action MoveFloor;
         public event Action AddFloor;
@@ -35,19 +36,10 @@ namespace ElevatorProject.Model
         public event Action<int> EventOpenDoors;
         public event Action UpdateTransported;
 
-        public string GetStatus()
-        {
-            return Status;
-        }
         public int GetCurrentFloor()
         {
             return CurrentFloor;
         }
-        public int GetTransported()
-        {
-            return NumTransported;
-        }
-
         public Result SendResult(Result result)
         {
             result.NumIdleTransport = NumIdleTransport;
@@ -58,68 +50,82 @@ namespace ElevatorProject.Model
         public void UpdateElevatorList(int floor, string status)
         {
             bool flag = false;
-            if (!ElevatorList.Any())
-            {
-                ElevatorList.Add(floor);
-                if (status == "Called the elevator")
-                    GoEmtyToCall();
-            }
-            else
-            {
-                switch (Math.Sign(CurrentFloor - ElevatorList[0]) == Math.Sign(CurrentFloor - floor))
+                if (!ElevatorList.Any())
                 {
-                    case true:
-                        for (int i = 0; i < FloorsInTheDirection; i++)
-                        {
-                            if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
-                            {
-                                ElevatorList.Insert(i, floor);
-                                FloorsInTheDirection++;
-                                flag = true;
-                                break;
-                            }
-
-                            if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
-                            {
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (!flag)
-                        {
-                            ElevatorList.Insert(FloorsInTheDirection, floor);
-                            FloorsInTheDirection++;
-                        }
-                        break;
-                    case false:
-                        if (ElevatorList.Count == FloorsInTheDirection)
-                        {
-                            ElevatorList.Insert(FloorsInTheDirection, floor);
-                        }
-                        else
-                        {
-                            for (int i = FloorsInTheDirection; i < ElevatorList.Count; i++)
-                            {
-                                if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
-                                {
-                                    ElevatorList.Insert(i, floor);
-                                    flag = true;
-                                    break;
-                                }
-
-                                if (Math.Abs(CurrentFloor - ElevatorList[0]) == Math.Abs(CurrentFloor - floor))
-                                {
-                                    flag = true;
-                                    break;
-                                }
-                            }
-                            if (!flag)
-                                ElevatorList.Insert(ElevatorList.Count, floor);
-                        }
-                        break;
-                        //}
+                    ElevatorList.Add(floor);
+                    FloorsInTheDirection++;
+                    EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
+                    if (status == "Called the elevator")
+                    {
+                        GoEmtyToCall();
+                    }
                 }
-            }
+                else
+                {
+                    if (CurrentFloor == floor && ElevatorList[0] != floor)
+                    {
+                        ElevatorList.Insert(0, floor);
+                        FloorsInTheDirection++;
+                    }
+                    else
+                    {
+                        switch ((Math.Sign(CurrentFloor - ElevatorList[0]) == Math.Sign(CurrentFloor - floor)) || (Math.Sign(CurrentFloor - ElevatorList[0]) == 0 && ElevatorList.Count > 1 && Math.Sign(CurrentFloor - ElevatorList[1]) == Math.Sign(CurrentFloor - floor)))
+                        {
+                            case true:
+                                for (int i = 0; i < FloorsInTheDirection; i++)
+                                {
+                                    if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
+                                    {
+                                        ElevatorList.Insert(i, floor);
+                                        FloorsInTheDirection++;
+                                        flag = true;
+                                        break;
+                                    }
+
+                                    if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
+                                    {
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+                                if (!flag)
+                                {
+                                    ElevatorList.Insert(FloorsInTheDirection, floor);
+                                    FloorsInTheDirection++;
+                                }
+                                break;
+                            case false:
+                                if (ElevatorList.Count == FloorsInTheDirection)
+                                {
+                                    ElevatorList.Insert(FloorsInTheDirection, floor);
+                                }
+                                else
+                                {
+                                    for (int i = FloorsInTheDirection; i < ElevatorList.Count; i++)
+                                    {
+                                        if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
+                                        {
+                                            ElevatorList.Insert(i, floor);
+                                            flag = true;
+                                            break;
+                                        }
+
+                                        if (Math.Abs(CurrentFloor - ElevatorList[0]) == Math.Abs(CurrentFloor - floor))
+                                        {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!flag)
+                                        ElevatorList.Insert(ElevatorList.Count, floor);
+                                }
+                                break;
+                        }
+                        EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
+                    }
+                    
+                }
+
         }
         private void GoEmtyToCall()
         {
@@ -144,6 +150,7 @@ namespace ElevatorProject.Model
             UpdateStatus?.Invoke(Status);
             Thread.Sleep(2000);
             ElevatorList.RemoveAt(0);
+            EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
             OpenDoors();
         }
         private void OpenDoors()
@@ -171,9 +178,8 @@ namespace ElevatorProject.Model
             Time currentTime = new Time(0, 5, 0, 0);
             Status = "Check mode";
             UpdateStatus?.Invoke(Status);
-
-            EventOpenDoors?.Invoke(CurrentFloor);
-
+            if(!DataBase.Overload)
+                EventOpenDoors?.Invoke(CurrentFloor);
             if (DataBase.IsClosed && CurrentWeight >= MaxWeight)
             {
                 DataBase.IsClosed = false;
@@ -181,11 +187,8 @@ namespace ElevatorProject.Model
             }
             else if(!DataBase.IsClosed)
             {
-                while (DataBase.Time - StandTime < currentTime)
-                {
-                    if (CurrentWeight >= MaxWeight)
-                        Signal();
-                }
+                DataBase.Overload = false;
+                Thread.Sleep((currentTime + StandTime - DataBase.Time).Ms + (currentTime + StandTime - DataBase.Time).Sec*1000);
             }
             CloseDoors();
         }
@@ -207,6 +210,9 @@ namespace ElevatorProject.Model
                 EventOpenDoors += PersonsList[PersonsList.Count - 1].EnterTheElevator;
                 PersonsList.RemoveAt(PersonsList.Count - 1);
             }
+
+            DataBase.IsClosed = false;
+            DataBase.Overload = true;
             CheckMode();
         }
         public void CloseDoors()

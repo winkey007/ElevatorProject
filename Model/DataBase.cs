@@ -9,7 +9,7 @@
         public static int Direction;
         public const int HeightFloor = 25;
         public static int CurrentHeight;
-        public static int TimeCurrentPerson;
+        public static bool Overload;
         public static Time Time = new Time();
         public static int Id;
         public static int CurrentId;

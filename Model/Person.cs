@@ -7,14 +7,13 @@ namespace ElevatorProject.Model
     {
         public Person(int id)
         {
-            Random rnd = new Random();
-            BirthdayFloor = rnd.Next(1, DataBase.NumFloors);
-            DestinationFloor = rnd.Next(1, DataBase.NumFloors);
+            BirthdayFloor = new Random().Next(1, DataBase.NumFloors);
+            DestinationFloor = new Random().Next(1, DataBase.NumFloors);
             while (DestinationFloor == BirthdayFloor)
             {
-                DestinationFloor = rnd.Next(1, DataBase.NumFloors);
+                DestinationFloor = new Random().Next(1, DataBase.NumFloors);
             }
-            Weight = rnd.Next(40, 100);
+            Weight = new Random().Next(40, 100);
             BirthdayTime.Ms = DataBase.Time.Ms;           BirthdayTime.Sec = DataBase.Time.Sec;
             BirthdayTime.Min = DataBase.Time.Min;         BirthdayTime.H = DataBase.Time.H;
             Status = "Created";

@@ -41,6 +41,11 @@ namespace ElevatorProject.View
                 task.Start();
             }
         }
+
+        private void SetElevatorList(string status)
+        {
+            ElevatorListBox.Invoke((MethodInvoker)(() => { ElevatorListBox.Text = status; }));
+        }
         private void SetPersonStatus(string status)
         {
             StatusBox.Invoke((MethodInvoker)(() => {StatusBox.Text = status;}));
@@ -91,7 +96,7 @@ namespace ElevatorProject.View
 
         private void FinishButton_Click(object sender, EventArgs e)
         {
-            if (_elevator.GetStatus() == "Standby mode" || _elevator.GetStatus() == "Go emty to call")
+            if (_elevator.Status == "Standby mode" || _elevator.Status == "Go emty to call")
             {
                 Result result = new Result();
                 _elevator.SendResult(result);
@@ -168,7 +173,7 @@ namespace ElevatorProject.View
         }
         public void SetNumTransported()
         {
-            TransportedBox.Invoke((MethodInvoker)(() => {TransportedBox.Text = _elevator.GetTransported().ToString();}));
+            TransportedBox.Invoke((MethodInvoker)(() => {TransportedBox.Text = _elevator.NumTransported.ToString();}));
         }
         private void CreateButton_Click(object sender, EventArgs e)
         {
@@ -284,13 +289,13 @@ namespace ElevatorProject.View
                 CurrentFloorPersonBox.Text = _personList[i].CurrentFloor.ToString();
                 LifetimeBox.Text = "00:00:00:0";
             }
-            else
-            {
-                NameBox.Text = "-";
-                StatusBox.Text = "-";
-                CurrentFloorPersonBox.Text = "-";
-                LifetimeBox.Text = "-";
-            }
+            //else
+            //{
+            //    NameBox.Text = "-";
+            //    StatusBox.Text = "-";
+            //    CurrentFloorPersonBox.Text = "-";
+            //    LifetimeBox.Text = "-";
+            //}
         }
 
         private void SimulationForm_Shown(object sender, EventArgs e)
@@ -300,13 +305,14 @@ namespace ElevatorProject.View
             _elevator.MoveFloor += MoveFloor;
             _elevator.UpdateStatus += SetElevatorStatus;
             _elevator.UpdateTransported += SetNumTransported;
+            _elevator.EventUpdateElevatorList += SetElevatorList;
             DataBase.CurrentId = 0; DataBase.Id = 0;
             CreatePersons(DataBase.NumPersons);
             ShowPeople(DataBase.CurrentId);
-            CurrentFloorBox.Text = _elevator.GetCurrentFloor().ToString();
+            CurrentFloorBox.Text = _elevator.CurrentFloor.ToString();
             TimeBox.Text = "0" + DataBase.Time.H.ToString() + ":" + "0" + DataBase.Time.Min.ToString() + ":" + "0" + DataBase.Time.Sec.ToString() + ":" + DataBase.Time.Ms.ToString(); ;
-            TransportedBox.Text = _elevator.GetTransported().ToString();
-            ElevatorBox.Text = _elevator.GetStatus();
+            TransportedBox.Text = _elevator.NumTransported.ToString();
+            ElevatorBox.Text = _elevator.Status;
         }
     }
 }
