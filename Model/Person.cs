@@ -7,13 +7,13 @@ namespace ElevatorProject.Model
     {
         public Person(int id)
         {
-            BirthdayFloor = new Random().Next(1, DataBase.NumFloors);
-            DestinationFloor = new Random().Next(1, DataBase.NumFloors);
+            BirthdayFloor = new Random().Next(1, DataBase.NumFloors + 1);
+            DestinationFloor = new Random().Next(1, DataBase.NumFloors + 1);
             while (DestinationFloor == BirthdayFloor)
             {
                 DestinationFloor = new Random().Next(1, DataBase.NumFloors);
             }
-            Weight = new Random().Next(40, 100);
+            Weight = new Random().Next(40, 120);
             BirthdayTime.Ms = DataBase.Time.Ms;           BirthdayTime.Sec = DataBase.Time.Sec;
             BirthdayTime.Min = DataBase.Time.Min;         BirthdayTime.H = DataBase.Time.H;
             Status = "Created";
@@ -22,11 +22,12 @@ namespace ElevatorProject.Model
         }
 
         public Time BirthdayTime = new Time();
+        public Time DeathTime = new Time();
         public int BirthdayFloor { set; get; }
         public int DestinationFloor { set; get; }
         public int Id { set; get; }
         public int CurrentFloor { set; get; }
-        public float Weight { set; get; }
+        public int Weight { set; get; }
         public string Status { set; get; }
 
         public event Action Alone;
@@ -40,7 +41,8 @@ namespace ElevatorProject.Model
         public void CallTheElevator()
         {
             Status = "Called the elevator";
-            UpdateStatus?.Invoke(Status);                
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status);                
             UpdateElevatorList?.Invoke(BirthdayFloor,Status); 
         }
         public void EnterTheElevator(int floor)
@@ -48,8 +50,9 @@ namespace ElevatorProject.Model
             if(CurrentFloor == floor && Status == "Called the elevator")
             {
                 Status = "Entered the elevator";
-                UpdateStatus?.Invoke(Status);         
-                Thread.Sleep(3000);
+                if (DataBase.CurrentId == Id)
+                    UpdateStatus?.Invoke(Status);         
+                Thread.Sleep(1000);
                 if (Entered != null && !Entered(this, DestinationFloor))
                     ChooseFloor();
                 Check();
@@ -70,14 +73,16 @@ namespace ElevatorProject.Model
         private void ChooseFloor()
         {
             Status = "Chose floor";
-            UpdateStatus?.Invoke(Status);                          
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status);                          
             Thread.Sleep(2000);
             UpdateElevatorList?.Invoke(DestinationFloor,Status);
         }
         private void CloseDoor()
         {
             Status = "Closed the doors";
-            UpdateStatus?.Invoke(Status);
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status);
             Thread.Sleep(1000);
             DataBase.IsClosed = true;
         }
@@ -86,8 +91,14 @@ namespace ElevatorProject.Model
             if(DestinationFloor == floor && (Status == "Moving up" || Status == "Moving down"))
             {
                 Status = "Get off the elevator";
-                UpdateStatus?.Invoke(Status);   
-                Transported?.Invoke(this);      
+                if (DataBase.CurrentId == Id)
+                    UpdateStatus?.Invoke(Status);   
+                Transported?.Invoke(this);
+                Thread.Sleep(5000);
+                Status = "Deleted";
+                DeathTime = DataBase.Time - BirthdayTime;
+                if (DataBase.CurrentId == Id)
+                    UpdateStatus?.Invoke(Status);
             }
         }
         public void UpdateStatusFromElevator()

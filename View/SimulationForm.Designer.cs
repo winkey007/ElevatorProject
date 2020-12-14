@@ -38,6 +38,11 @@ namespace ElevatorProject.View
             this.FinishButton = new System.Windows.Forms.Button();
             this.CreateButton = new System.Windows.Forms.Button();
             this.StatusBar = new System.Windows.Forms.Panel();
+            this.WeightBox = new System.Windows.Forms.TextBox();
+            this.WeightLabel = new System.Windows.Forms.Label();
+            this.PersonsPlaceholder = new System.Windows.Forms.Label();
+            this.ElevatorListBox = new System.Windows.Forms.TextBox();
+            this.ElevatorListLabel = new System.Windows.Forms.Label();
             this.StopStatusPic = new System.Windows.Forms.PictureBox();
             this.OverloadStatusPic = new System.Windows.Forms.PictureBox();
             this.DownStatusPic = new System.Windows.Forms.PictureBox();
@@ -45,10 +50,10 @@ namespace ElevatorProject.View
             this.ElevatorBox = new System.Windows.Forms.TextBox();
             this.UpStatusPic = new System.Windows.Forms.PictureBox();
             this.CloseStatusPic = new System.Windows.Forms.PictureBox();
-            this.TransportedBox = new System.Windows.Forms.TextBox();
+            this.NumPersonsBox = new System.Windows.Forms.TextBox();
             this.TimeBox = new System.Windows.Forms.TextBox();
             this.ElevatorLabel = new System.Windows.Forms.Label();
-            this.TransportedLabel = new System.Windows.Forms.Label();
+            this.NumPersonsLabel = new System.Windows.Forms.Label();
             this.OpenStatusPic = new System.Windows.Forms.PictureBox();
             this.WaitStatusPic = new System.Windows.Forms.PictureBox();
             this.CallStatusPic = new System.Windows.Forms.PictureBox();
@@ -63,11 +68,11 @@ namespace ElevatorProject.View
             this.Logo = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.LifetimeBox = new System.Windows.Forms.TextBox();
-            this.CurrentFloorPersonBox = new System.Windows.Forms.TextBox();
+            this.FloorsPersonBox = new System.Windows.Forms.TextBox();
             this.LifetimeLabel = new System.Windows.Forms.Label();
             this.StatusBox = new System.Windows.Forms.TextBox();
             this.NameBox = new System.Windows.Forms.TextBox();
-            this.CurrentFloorLabel = new System.Windows.Forms.Label();
+            this.FloorsLabel = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.NameLabel = new System.Windows.Forms.Label();
             this.PersonStatusLabel = new System.Windows.Forms.Label();
@@ -75,8 +80,7 @@ namespace ElevatorProject.View
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.rightButton = new System.Windows.Forms.PictureBox();
             this.LeftButton = new System.Windows.Forms.PictureBox();
-            this.ElevatorListBox = new System.Windows.Forms.TextBox();
-            this.ElevatorListLabel = new System.Windows.Forms.Label();
+            this.FloorsPlaceholder = new System.Windows.Forms.Label();
             this.StatusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StopStatusPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadStatusPic)).BeginInit();
@@ -105,7 +109,7 @@ namespace ElevatorProject.View
             this.FinishButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(124)))), ((int)(((byte)(124)))));
             this.FinishButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FinishButton.Font = new System.Drawing.Font("Ink Free", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FinishButton.Location = new System.Drawing.Point(611, 567);
+            this.FinishButton.Location = new System.Drawing.Point(727, 676);
             this.FinishButton.Name = "FinishButton";
             this.FinishButton.Size = new System.Drawing.Size(142, 63);
             this.FinishButton.TabIndex = 1;
@@ -123,7 +127,7 @@ namespace ElevatorProject.View
             this.CreateButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(252)))), ((int)(((byte)(159)))));
             this.CreateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CreateButton.Font = new System.Drawing.Font("Ink Free", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CreateButton.Location = new System.Drawing.Point(123, 567);
+            this.CreateButton.Location = new System.Drawing.Point(239, 676);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(145, 63);
             this.CreateButton.TabIndex = 3;
@@ -135,6 +139,9 @@ namespace ElevatorProject.View
             // 
             this.StatusBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
             this.StatusBar.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.StatusBar.Controls.Add(this.WeightBox);
+            this.StatusBar.Controls.Add(this.WeightLabel);
+            this.StatusBar.Controls.Add(this.PersonsPlaceholder);
             this.StatusBar.Controls.Add(this.ElevatorListBox);
             this.StatusBar.Controls.Add(this.ElevatorListLabel);
             this.StatusBar.Controls.Add(this.StopStatusPic);
@@ -144,24 +151,78 @@ namespace ElevatorProject.View
             this.StatusBar.Controls.Add(this.ElevatorBox);
             this.StatusBar.Controls.Add(this.UpStatusPic);
             this.StatusBar.Controls.Add(this.CloseStatusPic);
-            this.StatusBar.Controls.Add(this.TransportedBox);
+            this.StatusBar.Controls.Add(this.NumPersonsBox);
             this.StatusBar.Controls.Add(this.TimeBox);
             this.StatusBar.Controls.Add(this.ElevatorLabel);
-            this.StatusBar.Controls.Add(this.TransportedLabel);
+            this.StatusBar.Controls.Add(this.NumPersonsLabel);
             this.StatusBar.Controls.Add(this.OpenStatusPic);
             this.StatusBar.Controls.Add(this.WaitStatusPic);
             this.StatusBar.Controls.Add(this.CallStatusPic);
             this.StatusBar.Controls.Add(this.TimeLabel);
             this.StatusBar.Controls.Add(this.StatusBarLabel);
-            this.StatusBar.Location = new System.Drawing.Point(86, 50);
+            this.StatusBar.Location = new System.Drawing.Point(202, 50);
             this.StatusBar.Name = "StatusBar";
-            this.StatusBar.Size = new System.Drawing.Size(511, 222);
+            this.StatusBar.Size = new System.Drawing.Size(583, 282);
             this.StatusBar.TabIndex = 11;
+            // 
+            // WeightBox
+            // 
+            this.WeightBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.WeightBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.WeightBox.Location = new System.Drawing.Point(330, 233);
+            this.WeightBox.Multiline = true;
+            this.WeightBox.Name = "WeightBox";
+            this.WeightBox.ReadOnly = true;
+            this.WeightBox.Size = new System.Drawing.Size(236, 34);
+            this.WeightBox.TabIndex = 61;
+            this.WeightBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // WeightLabel
+            // 
+            this.WeightLabel.AutoSize = true;
+            this.WeightLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.WeightLabel.Location = new System.Drawing.Point(3, 233);
+            this.WeightLabel.Name = "WeightLabel";
+            this.WeightLabel.Size = new System.Drawing.Size(277, 34);
+            this.WeightLabel.TabIndex = 60;
+            this.WeightLabel.Text = "Weight: current/max";
+            // 
+            // PersonsPlaceholder
+            // 
+            this.PersonsPlaceholder.AutoSize = true;
+            this.PersonsPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.PersonsPlaceholder.Location = new System.Drawing.Point(355, 124);
+            this.PersonsPlaceholder.Name = "PersonsPlaceholder";
+            this.PersonsPlaceholder.Size = new System.Drawing.Size(191, 17);
+            this.PersonsPlaceholder.TabIndex = 59;
+            this.PersonsPlaceholder.Text = "inside / delivered / called";
+            // 
+            // ElevatorListBox
+            // 
+            this.ElevatorListBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.ElevatorListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ElevatorListBox.Location = new System.Drawing.Point(330, 189);
+            this.ElevatorListBox.Multiline = true;
+            this.ElevatorListBox.Name = "ElevatorListBox";
+            this.ElevatorListBox.ReadOnly = true;
+            this.ElevatorListBox.Size = new System.Drawing.Size(236, 34);
+            this.ElevatorListBox.TabIndex = 58;
+            this.ElevatorListBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ElevatorListLabel
+            // 
+            this.ElevatorListLabel.AutoSize = true;
+            this.ElevatorListLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ElevatorListLabel.Location = new System.Drawing.Point(3, 189);
+            this.ElevatorListLabel.Name = "ElevatorListLabel";
+            this.ElevatorListLabel.Size = new System.Drawing.Size(188, 34);
+            this.ElevatorListLabel.TabIndex = 57;
+            this.ElevatorListLabel.Text = "Elevator List";
             // 
             // StopStatusPic
             // 
             this.StopStatusPic.Image = global::ElevatorProject.Properties.Resources.stop;
-            this.StopStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.StopStatusPic.Location = new System.Drawing.Point(532, 148);
             this.StopStatusPic.Name = "StopStatusPic";
             this.StopStatusPic.Size = new System.Drawing.Size(34, 34);
             this.StopStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -172,7 +233,7 @@ namespace ElevatorProject.View
             // OverloadStatusPic
             // 
             this.OverloadStatusPic.Image = global::ElevatorProject.Properties.Resources.signal;
-            this.OverloadStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.OverloadStatusPic.Location = new System.Drawing.Point(532, 148);
             this.OverloadStatusPic.Name = "OverloadStatusPic";
             this.OverloadStatusPic.Size = new System.Drawing.Size(34, 34);
             this.OverloadStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -183,7 +244,7 @@ namespace ElevatorProject.View
             // DownStatusPic
             // 
             this.DownStatusPic.Image = global::ElevatorProject.Properties.Resources.down;
-            this.DownStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.DownStatusPic.Location = new System.Drawing.Point(532, 148);
             this.DownStatusPic.Name = "DownStatusPic";
             this.DownStatusPic.Size = new System.Drawing.Size(34, 34);
             this.DownStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -194,7 +255,7 @@ namespace ElevatorProject.View
             // CheckStatusPic
             // 
             this.CheckStatusPic.Image = global::ElevatorProject.Properties.Resources.check;
-            this.CheckStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.CheckStatusPic.Location = new System.Drawing.Point(532, 148);
             this.CheckStatusPic.Name = "CheckStatusPic";
             this.CheckStatusPic.Size = new System.Drawing.Size(34, 34);
             this.CheckStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -206,18 +267,18 @@ namespace ElevatorProject.View
             // 
             this.ElevatorBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
             this.ElevatorBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ElevatorBox.Location = new System.Drawing.Point(270, 131);
+            this.ElevatorBox.Location = new System.Drawing.Point(330, 148);
             this.ElevatorBox.Multiline = true;
             this.ElevatorBox.Name = "ElevatorBox";
             this.ElevatorBox.ReadOnly = true;
-            this.ElevatorBox.Size = new System.Drawing.Size(188, 34);
+            this.ElevatorBox.Size = new System.Drawing.Size(196, 34);
             this.ElevatorBox.TabIndex = 49;
             this.ElevatorBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // UpStatusPic
             // 
             this.UpStatusPic.Image = global::ElevatorProject.Properties.Resources.up;
-            this.UpStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.UpStatusPic.Location = new System.Drawing.Point(532, 148);
             this.UpStatusPic.Name = "UpStatusPic";
             this.UpStatusPic.Size = new System.Drawing.Size(34, 34);
             this.UpStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -228,7 +289,7 @@ namespace ElevatorProject.View
             // CloseStatusPic
             // 
             this.CloseStatusPic.Image = global::ElevatorProject.Properties.Resources.close;
-            this.CloseStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.CloseStatusPic.Location = new System.Drawing.Point(532, 148);
             this.CloseStatusPic.Name = "CloseStatusPic";
             this.CloseStatusPic.Size = new System.Drawing.Size(34, 34);
             this.CloseStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -236,27 +297,27 @@ namespace ElevatorProject.View
             this.CloseStatusPic.TabStop = false;
             this.CloseStatusPic.Visible = false;
             // 
-            // TransportedBox
+            // NumPersonsBox
             // 
-            this.TransportedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
-            this.TransportedBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TransportedBox.Location = new System.Drawing.Point(270, 87);
-            this.TransportedBox.Multiline = true;
-            this.TransportedBox.Name = "TransportedBox";
-            this.TransportedBox.ReadOnly = true;
-            this.TransportedBox.Size = new System.Drawing.Size(188, 34);
-            this.TransportedBox.TabIndex = 47;
-            this.TransportedBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.NumPersonsBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.NumPersonsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.NumPersonsBox.Location = new System.Drawing.Point(330, 87);
+            this.NumPersonsBox.Multiline = true;
+            this.NumPersonsBox.Name = "NumPersonsBox";
+            this.NumPersonsBox.ReadOnly = true;
+            this.NumPersonsBox.Size = new System.Drawing.Size(236, 34);
+            this.NumPersonsBox.TabIndex = 47;
+            this.NumPersonsBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TimeBox
             // 
             this.TimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
             this.TimeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TimeBox.Location = new System.Drawing.Point(270, 43);
+            this.TimeBox.Location = new System.Drawing.Point(330, 43);
             this.TimeBox.Multiline = true;
             this.TimeBox.Name = "TimeBox";
             this.TimeBox.ReadOnly = true;
-            this.TimeBox.Size = new System.Drawing.Size(188, 34);
+            this.TimeBox.Size = new System.Drawing.Size(236, 34);
             this.TimeBox.TabIndex = 45;
             this.TimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -264,26 +325,26 @@ namespace ElevatorProject.View
             // 
             this.ElevatorLabel.AutoSize = true;
             this.ElevatorLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ElevatorLabel.Location = new System.Drawing.Point(3, 131);
+            this.ElevatorLabel.Location = new System.Drawing.Point(3, 148);
             this.ElevatorLabel.Name = "ElevatorLabel";
-            this.ElevatorLabel.Size = new System.Drawing.Size(127, 34);
+            this.ElevatorLabel.Size = new System.Drawing.Size(226, 34);
             this.ElevatorLabel.TabIndex = 42;
-            this.ElevatorLabel.Text = "Elevator";
+            this.ElevatorLabel.Text = "Elevator Status";
             // 
-            // TransportedLabel
+            // NumPersonsLabel
             // 
-            this.TransportedLabel.AutoSize = true;
-            this.TransportedLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TransportedLabel.Location = new System.Drawing.Point(3, 87);
-            this.TransportedLabel.Name = "TransportedLabel";
-            this.TransportedLabel.Size = new System.Drawing.Size(177, 34);
-            this.TransportedLabel.TabIndex = 41;
-            this.TransportedLabel.Text = "Transported";
+            this.NumPersonsLabel.AutoSize = true;
+            this.NumPersonsLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumPersonsLabel.Location = new System.Drawing.Point(3, 87);
+            this.NumPersonsLabel.Name = "NumPersonsLabel";
+            this.NumPersonsLabel.Size = new System.Drawing.Size(220, 34);
+            this.NumPersonsLabel.TabIndex = 41;
+            this.NumPersonsLabel.Text = "Number Persons";
             // 
             // OpenStatusPic
             // 
             this.OpenStatusPic.Image = global::ElevatorProject.Properties.Resources.open;
-            this.OpenStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.OpenStatusPic.Location = new System.Drawing.Point(532, 148);
             this.OpenStatusPic.Name = "OpenStatusPic";
             this.OpenStatusPic.Size = new System.Drawing.Size(34, 34);
             this.OpenStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -294,7 +355,7 @@ namespace ElevatorProject.View
             // WaitStatusPic
             // 
             this.WaitStatusPic.Image = global::ElevatorProject.Properties.Resources.wait;
-            this.WaitStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.WaitStatusPic.Location = new System.Drawing.Point(532, 148);
             this.WaitStatusPic.Name = "WaitStatusPic";
             this.WaitStatusPic.Size = new System.Drawing.Size(34, 34);
             this.WaitStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -304,7 +365,7 @@ namespace ElevatorProject.View
             // CallStatusPic
             // 
             this.CallStatusPic.Image = global::ElevatorProject.Properties.Resources.call;
-            this.CallStatusPic.Location = new System.Drawing.Point(464, 131);
+            this.CallStatusPic.Location = new System.Drawing.Point(532, 148);
             this.CallStatusPic.Name = "CallStatusPic";
             this.CallStatusPic.Size = new System.Drawing.Size(34, 34);
             this.CallStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -340,7 +401,7 @@ namespace ElevatorProject.View
             this.ElevatorRoad.Dock = System.Windows.Forms.DockStyle.Left;
             this.ElevatorRoad.Location = new System.Drawing.Point(0, 0);
             this.ElevatorRoad.Name = "ElevatorRoad";
-            this.ElevatorRoad.Size = new System.Drawing.Size(80, 642);
+            this.ElevatorRoad.Size = new System.Drawing.Size(200, 751);
             this.ElevatorRoad.TabIndex = 13;
             // 
             // CurrentFloorBox
@@ -349,7 +410,7 @@ namespace ElevatorProject.View
             this.CurrentFloorBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.CurrentFloorBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CurrentFloorBox.ForeColor = System.Drawing.Color.Red;
-            this.CurrentFloorBox.Location = new System.Drawing.Point(16, 580);
+            this.CurrentFloorBox.Location = new System.Drawing.Point(148, 689);
             this.CurrentFloorBox.Multiline = true;
             this.CurrentFloorBox.Name = "CurrentFloorBox";
             this.CurrentFloorBox.ReadOnly = true;
@@ -361,7 +422,7 @@ namespace ElevatorProject.View
             // 
             this.ElevatorPic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(172)))), ((int)(((byte)(170)))), ((int)(((byte)(173)))));
             this.ElevatorPic.Image = global::ElevatorProject.Properties.Resources.elevator;
-            this.ElevatorPic.Location = new System.Drawing.Point(28, 612);
+            this.ElevatorPic.Location = new System.Drawing.Point(160, 721);
             this.ElevatorPic.Name = "ElevatorPic";
             this.ElevatorPic.Size = new System.Drawing.Size(24, 30);
             this.ElevatorPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -375,9 +436,9 @@ namespace ElevatorProject.View
             this.Header.Controls.Add(this.HeaderName);
             this.Header.Controls.Add(this.Logo);
             this.Header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Header.Location = new System.Drawing.Point(80, 0);
+            this.Header.Location = new System.Drawing.Point(200, 0);
             this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(685, 44);
+            this.Header.Size = new System.Drawing.Size(681, 44);
             this.Header.TabIndex = 15;
             this.Header.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Header_MouseDown);
             this.Header.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Header_MouseMove);
@@ -393,7 +454,7 @@ namespace ElevatorProject.View
             this.CloseButton.Location = new System.Drawing.Point(643, 0);
             this.CloseButton.Margin = new System.Windows.Forms.Padding(0);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(42, 42);
+            this.CloseButton.Size = new System.Drawing.Size(38, 42);
             this.CloseButton.TabIndex = 34;
             this.CloseButton.Text = "x";
             this.CloseButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -428,49 +489,50 @@ namespace ElevatorProject.View
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.FloorsPlaceholder);
             this.panel1.Controls.Add(this.LifetimeBox);
-            this.panel1.Controls.Add(this.CurrentFloorPersonBox);
+            this.panel1.Controls.Add(this.FloorsPersonBox);
             this.panel1.Controls.Add(this.LifetimeLabel);
             this.panel1.Controls.Add(this.StatusBox);
             this.panel1.Controls.Add(this.NameBox);
-            this.panel1.Controls.Add(this.CurrentFloorLabel);
+            this.panel1.Controls.Add(this.FloorsLabel);
             this.panel1.Controls.Add(this.StatusLabel);
             this.panel1.Controls.Add(this.NameLabel);
             this.panel1.Controls.Add(this.PersonStatusLabel);
-            this.panel1.Location = new System.Drawing.Point(276, 278);
+            this.panel1.Location = new System.Drawing.Point(344, 361);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(477, 217);
+            this.panel1.Size = new System.Drawing.Size(525, 243);
             this.panel1.TabIndex = 16;
             // 
             // LifetimeBox
             // 
             this.LifetimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
             this.LifetimeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LifetimeBox.Location = new System.Drawing.Point(251, 172);
+            this.LifetimeBox.Location = new System.Drawing.Point(251, 192);
             this.LifetimeBox.Multiline = true;
             this.LifetimeBox.Name = "LifetimeBox";
             this.LifetimeBox.ReadOnly = true;
-            this.LifetimeBox.Size = new System.Drawing.Size(207, 34);
+            this.LifetimeBox.Size = new System.Drawing.Size(254, 34);
             this.LifetimeBox.TabIndex = 51;
             this.LifetimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CurrentFloorPersonBox
+            // FloorsPersonBox
             // 
-            this.CurrentFloorPersonBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
-            this.CurrentFloorPersonBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CurrentFloorPersonBox.Location = new System.Drawing.Point(251, 131);
-            this.CurrentFloorPersonBox.Multiline = true;
-            this.CurrentFloorPersonBox.Name = "CurrentFloorPersonBox";
-            this.CurrentFloorPersonBox.ReadOnly = true;
-            this.CurrentFloorPersonBox.Size = new System.Drawing.Size(207, 34);
-            this.CurrentFloorPersonBox.TabIndex = 49;
-            this.CurrentFloorPersonBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.FloorsPersonBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.FloorsPersonBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FloorsPersonBox.Location = new System.Drawing.Point(251, 131);
+            this.FloorsPersonBox.Multiline = true;
+            this.FloorsPersonBox.Name = "FloorsPersonBox";
+            this.FloorsPersonBox.ReadOnly = true;
+            this.FloorsPersonBox.Size = new System.Drawing.Size(254, 34);
+            this.FloorsPersonBox.TabIndex = 49;
+            this.FloorsPersonBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LifetimeLabel
             // 
             this.LifetimeLabel.AutoSize = true;
             this.LifetimeLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LifetimeLabel.Location = new System.Drawing.Point(3, 172);
+            this.LifetimeLabel.Location = new System.Drawing.Point(3, 192);
             this.LifetimeLabel.Name = "LifetimeLabel";
             this.LifetimeLabel.Size = new System.Drawing.Size(124, 34);
             this.LifetimeLabel.TabIndex = 50;
@@ -484,7 +546,7 @@ namespace ElevatorProject.View
             this.StatusBox.Multiline = true;
             this.StatusBox.Name = "StatusBox";
             this.StatusBox.ReadOnly = true;
-            this.StatusBox.Size = new System.Drawing.Size(207, 34);
+            this.StatusBox.Size = new System.Drawing.Size(254, 34);
             this.StatusBox.TabIndex = 47;
             this.StatusBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -496,19 +558,19 @@ namespace ElevatorProject.View
             this.NameBox.Multiline = true;
             this.NameBox.Name = "NameBox";
             this.NameBox.ReadOnly = true;
-            this.NameBox.Size = new System.Drawing.Size(207, 34);
+            this.NameBox.Size = new System.Drawing.Size(254, 34);
             this.NameBox.TabIndex = 45;
             this.NameBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CurrentFloorLabel
+            // FloorsLabel
             // 
-            this.CurrentFloorLabel.AutoSize = true;
-            this.CurrentFloorLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentFloorLabel.Location = new System.Drawing.Point(3, 131);
-            this.CurrentFloorLabel.Name = "CurrentFloorLabel";
-            this.CurrentFloorLabel.Size = new System.Drawing.Size(183, 34);
-            this.CurrentFloorLabel.TabIndex = 42;
-            this.CurrentFloorLabel.Text = "Current floor";
+            this.FloorsLabel.AutoSize = true;
+            this.FloorsLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FloorsLabel.Location = new System.Drawing.Point(3, 131);
+            this.FloorsLabel.Name = "FloorsLabel";
+            this.FloorsLabel.Size = new System.Drawing.Size(92, 34);
+            this.FloorsLabel.TabIndex = 42;
+            this.FloorsLabel.Text = "Floors";
             // 
             // StatusLabel
             // 
@@ -550,7 +612,7 @@ namespace ElevatorProject.View
             this.ErrorLabel.AutoSize = true;
             this.ErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ErrorLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(188)))), ((int)(((byte)(179)))), ((int)(((byte)(199)))));
-            this.ErrorLabel.Location = new System.Drawing.Point(318, 553);
+            this.ErrorLabel.Location = new System.Drawing.Point(434, 662);
             this.ErrorLabel.Name = "ErrorLabel";
             this.ErrorLabel.Size = new System.Drawing.Size(279, 31);
             this.ErrorLabel.TabIndex = 19;
@@ -560,7 +622,7 @@ namespace ElevatorProject.View
             // 
             this.rightButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.rightButton.Image = global::ElevatorProject.Properties.Resources.right;
-            this.rightButton.Location = new System.Drawing.Point(703, 501);
+            this.rightButton.Location = new System.Drawing.Point(819, 610);
             this.rightButton.Name = "rightButton";
             this.rightButton.Size = new System.Drawing.Size(50, 50);
             this.rightButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -572,7 +634,7 @@ namespace ElevatorProject.View
             // 
             this.LeftButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LeftButton.Image = global::ElevatorProject.Properties.Resources.left;
-            this.LeftButton.Location = new System.Drawing.Point(633, 501);
+            this.LeftButton.Location = new System.Drawing.Point(749, 610);
             this.LeftButton.Name = "LeftButton";
             this.LeftButton.Size = new System.Drawing.Size(50, 50);
             this.LeftButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -580,27 +642,15 @@ namespace ElevatorProject.View
             this.LeftButton.TabStop = false;
             this.LeftButton.Click += new System.EventHandler(this.LeftButton_Click);
             // 
-            // ElevatorListBox
+            // FloorsPlaceholder
             // 
-            this.ElevatorListBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
-            this.ElevatorListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ElevatorListBox.Location = new System.Drawing.Point(270, 172);
-            this.ElevatorListBox.Multiline = true;
-            this.ElevatorListBox.Name = "ElevatorListBox";
-            this.ElevatorListBox.ReadOnly = true;
-            this.ElevatorListBox.Size = new System.Drawing.Size(228, 34);
-            this.ElevatorListBox.TabIndex = 58;
-            this.ElevatorListBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // ElevatorListLabel
-            // 
-            this.ElevatorListLabel.AutoSize = true;
-            this.ElevatorListLabel.Font = new System.Drawing.Font("Ink Free", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ElevatorListLabel.Location = new System.Drawing.Point(3, 172);
-            this.ElevatorListLabel.Name = "ElevatorListLabel";
-            this.ElevatorListLabel.Size = new System.Drawing.Size(188, 34);
-            this.ElevatorListLabel.TabIndex = 57;
-            this.ElevatorListLabel.Text = "Elevator List";
+            this.FloorsPlaceholder.AutoSize = true;
+            this.FloorsPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.FloorsPlaceholder.Location = new System.Drawing.Point(267, 168);
+            this.FloorsPlaceholder.Name = "FloorsPlaceholder";
+            this.FloorsPlaceholder.Size = new System.Drawing.Size(229, 17);
+            this.FloorsPlaceholder.TabIndex = 60;
+            this.FloorsPlaceholder.Text = "current / birthday / dectination";
             // 
             // SimulationForm
             // 
@@ -609,7 +659,7 @@ namespace ElevatorProject.View
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(188)))), ((int)(((byte)(179)))), ((int)(((byte)(199)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(765, 642);
+            this.ClientSize = new System.Drawing.Size(881, 751);
             this.Controls.Add(this.ErrorLabel);
             this.Controls.Add(this.rightButton);
             this.Controls.Add(this.LeftButton);
@@ -668,16 +718,16 @@ namespace ElevatorProject.View
         private Label HeaderName;
         private Label CloseButton;
         private TextBox ElevatorBox;
-        private TextBox TransportedBox;
+        private TextBox NumPersonsBox;
         private TextBox TimeBox;
         private Label ElevatorLabel;
-        private Label TransportedLabel;
+        private Label NumPersonsLabel;
         private Label TimeLabel;
         private Panel panel1;
-        private TextBox CurrentFloorPersonBox;
+        private TextBox FloorsPersonBox;
         private TextBox StatusBox;
         private TextBox NameBox;
-        private Label CurrentFloorLabel;
+        private Label FloorsLabel;
         private Label StatusLabel;
         private Label NameLabel;
         private Label PersonStatusLabel;
@@ -700,6 +750,10 @@ namespace ElevatorProject.View
         private Label LifetimeLabel;
         private TextBox ElevatorListBox;
         private Label ElevatorListLabel;
+        private TextBox WeightBox;
+        private Label WeightLabel;
+        private Label PersonsPlaceholder;
+        private Label FloorsPlaceholder;
     }
 }
 

@@ -41,7 +41,12 @@ namespace ElevatorProject.View
                 task.Start();
             }
         }
-
+        public void SetNumTransported(int Weight)
+        {
+            NumPersonsBox.Invoke((MethodInvoker)(() => { NumPersonsBox.Text = _elevator.PersonsList.Count.ToString() + " / " + _elevator.NumTransported.ToString()
+                                 .ToString() + " / " + (_personList.Count - _elevator.PersonsList.Count - _elevator.NumTransported); }));
+            WeightBox.Invoke((MethodInvoker)(() => { WeightBox.Text = Weight.ToString() + " / " + Elevator.MaxWeight.ToString(); }));
+        }
         private void SetElevatorList(string status)
         {
             ElevatorListBox.Invoke((MethodInvoker)(() => { ElevatorListBox.Text = status; }));
@@ -52,7 +57,10 @@ namespace ElevatorProject.View
         }
         private void SetPersonFloor(string status)
         {
-            StatusBox.Invoke((MethodInvoker)(() => {CurrentFloorPersonBox.Text = status;}));
+            StatusBox.Invoke((MethodInvoker)(() =>
+            {
+                FloorsPersonBox.Text =
+                    status + FloorsPersonBox.Text.Substring((Convert.ToInt32(status) + DataBase.Direction).ToString().Length); }));
         }
         private void CloseButton_MouseEnter(object sender, EventArgs e)
         {
@@ -96,14 +104,14 @@ namespace ElevatorProject.View
 
         private void FinishButton_Click(object sender, EventArgs e)
         {
-            if (_elevator.Status == "Standby mode" || _elevator.Status == "Go emty to call")
+            if (_elevator.PersonsList.Count == 0)
             {
                 Result result = new Result();
                 _elevator.SendResult(result);
                 timer.Enabled = false;
-                Hide();
                 ResultForm resultForm = new ResultForm(TimeBox.Text, result);
                 resultForm.Show();
+                Close();
             }
             else
             {
@@ -112,49 +120,63 @@ namespace ElevatorProject.View
         }
         public void SetElevatorStatus(string status)
         {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+            player.SoundLocation = Environment.CurrentDirectory + @"\..\..\sounds\";
             StatusBox.Invoke((MethodInvoker)(() => {ElevatorBox.Text = status;}));
             switch (status)
             {
                 case "Go emty to call":
+                    CloseStatusPic.Invoke((MethodInvoker)(() => { CloseStatusPic.Visible = false; }));
                     WaitStatusPic.Invoke((MethodInvoker)(() => { WaitStatusPic.Visible = false; }));
                     CallStatusPic.Invoke((MethodInvoker)(() => { CallStatusPic.Visible = true; }));
+                    player.SoundLocation += "call";
                     break;
                 case "Stand":
                     StopStatusPic.Invoke((MethodInvoker)(() => { StopStatusPic.Visible = true; }));
                     UpStatusPic.Invoke((MethodInvoker)(() => { UpStatusPic.Visible = false; }));
                     DownStatusPic.Invoke((MethodInvoker)(() => { DownStatusPic.Visible = false; }));
                     CallStatusPic.Invoke((MethodInvoker)(() => { CallStatusPic.Visible = false; }));
+                    player.SoundLocation += "stop";
                     break;
                 case "Open doors":
                     StopStatusPic.Invoke((MethodInvoker)(() => { StopStatusPic.Visible = false; }));
                     OpenStatusPic.Invoke((MethodInvoker)(() => { OpenStatusPic.Visible = true; }));
+                    player.SoundLocation += "open";
                     break;
                 case "Check mode":
                     CheckStatusPic.Invoke((MethodInvoker)(() => { CheckStatusPic.Visible = true; }));
                     OpenStatusPic.Invoke((MethodInvoker)(() => { OpenStatusPic.Visible = false; }));
                     OverloadStatusPic.Invoke((MethodInvoker)(() => { OverloadStatusPic.Visible = false; }));
+                    player.SoundLocation += "check";
                     break;
                 case "Close doors":
                     CheckStatusPic.Invoke((MethodInvoker)(() => { CheckStatusPic.Visible = false; }));
                     CloseStatusPic.Invoke((MethodInvoker)(() => { CloseStatusPic.Visible = true; }));
+                    player.SoundLocation += "close";
                     break;
                 case "Carry up":
                     UpStatusPic.Invoke((MethodInvoker)(() => { UpStatusPic.Visible = true; }));
                     CloseStatusPic.Invoke((MethodInvoker)(() => { CloseStatusPic.Visible = false; }));
+                    player.SoundLocation += "up";
                     break;
                 case "Carry down":
                     DownStatusPic.Invoke((MethodInvoker)(() => { DownStatusPic.Visible = true; }));
                     CloseStatusPic.Invoke((MethodInvoker)(() => { CloseStatusPic.Visible = false; }));
+                    player.SoundLocation += "down";
                     break;
                 case "Standby mode":
                     WaitStatusPic.Invoke((MethodInvoker)(() => { WaitStatusPic.Visible = true; }));
                     CloseStatusPic.Invoke((MethodInvoker)(() => { CloseStatusPic.Visible = false; }));
+                    player.SoundLocation += "wait";
                     break;
                 case "Signal Overload":
                     OverloadStatusPic.Invoke((MethodInvoker)(() => { OverloadStatusPic.Visible = true; }));
                     CheckStatusPic.Invoke((MethodInvoker)(() => { CheckStatusPic.Visible = false; }));
+                    player.SoundLocation += "overload";
                     break;
             }
+            player.SoundLocation += new Random().Next(0, 3).ToString() + ".wav";
+            player.Play();
         }
         public void MoveFloor()
         {
@@ -170,10 +192,6 @@ namespace ElevatorProject.View
         {
             DataBase.CurrentId--;
             ShowPeople(DataBase.CurrentId);
-        }
-        public void SetNumTransported()
-        {
-            TransportedBox.Invoke((MethodInvoker)(() => {TransportedBox.Text = _elevator.NumTransported.ToString();}));
         }
         private void CreateButton_Click(object sender, EventArgs e)
         {
@@ -198,7 +216,7 @@ namespace ElevatorProject.View
             TimeBox.Text = ShowTime(DataBase.Time);
             if (_personList.Any())
             {
-                Time time = DataBase.Time - _personList[DataBase.CurrentId].BirthdayTime;
+                Time time =  _personList[DataBase.CurrentId].DeathTime > new Time() ? _personList[DataBase.CurrentId].DeathTime : (DataBase.Time - _personList[DataBase.CurrentId].BirthdayTime);
                 LifetimeBox.Text = ShowTime(time);
             }
         }
@@ -286,7 +304,7 @@ namespace ElevatorProject.View
             {
                 NameBox.Text = "Person " + _personList[i].Id;
                 StatusBox.Text = _personList[i].Status;
-                CurrentFloorPersonBox.Text = _personList[i].CurrentFloor.ToString();
+                FloorsPersonBox.Text = _personList[i].CurrentFloor.ToString()+" / " + _personList[i].BirthdayFloor.ToString() + " / " + _personList[i].DestinationFloor.ToString();
                 LifetimeBox.Text = "00:00:00:0";
             }
             //else
@@ -298,10 +316,14 @@ namespace ElevatorProject.View
             //}
         }
 
+        private void AddPersonImage(int CurrentFloor, int Id)
+        {
+
+        }
         private void SimulationForm_Shown(object sender, EventArgs e)
         {
             DataBase.CurrentHeight = -1;
-            DataBase.FloorLength = DataBase.PathLength / DataBase.NumFloors;
+            DataBase.FloorLength = DataBase.PathLength / (DataBase.NumFloors-1);
             _elevator.MoveFloor += MoveFloor;
             _elevator.UpdateStatus += SetElevatorStatus;
             _elevator.UpdateTransported += SetNumTransported;
@@ -310,9 +332,12 @@ namespace ElevatorProject.View
             CreatePersons(DataBase.NumPersons);
             ShowPeople(DataBase.CurrentId);
             CurrentFloorBox.Text = _elevator.CurrentFloor.ToString();
-            TimeBox.Text = "0" + DataBase.Time.H.ToString() + ":" + "0" + DataBase.Time.Min.ToString() + ":" + "0" + DataBase.Time.Sec.ToString() + ":" + DataBase.Time.Ms.ToString(); ;
-            TransportedBox.Text = _elevator.NumTransported.ToString();
+            TimeBox.Text = "0" + DataBase.Time.H.ToString() + ":" + "0" + DataBase.Time.Min.ToString() + ":" + "0" + DataBase.Time.Sec.ToString() + ":" + DataBase.Time.Ms.ToString();
+            NumPersonsBox.Text = _elevator.PersonsList.Count.ToString() + " / " + _elevator.NumTransported.ToString()
+                                 .ToString() + " / " + (_personList.Count - _elevator.PersonsList.Count - _elevator.NumTransported);
             ElevatorBox.Text = _elevator.Status;
+            WeightBox.Text = "0 / " + Elevator.MaxWeight;
         }
+
     }
 }

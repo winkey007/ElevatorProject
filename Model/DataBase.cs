@@ -4,7 +4,7 @@
     {
         public static int NumPersons;
         public static int NumFloors;
-        public const int PathLength = 590;
+        public const int PathLength = 751;
         public static int FloorLength;
         public static int Direction;
         public const int HeightFloor = 25;

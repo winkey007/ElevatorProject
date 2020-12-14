@@ -16,9 +16,10 @@ namespace ElevatorProject.Model
             NumTransported = 0;
             FloorsInTheDirection = 0;
         }
-        private const float MaxWeight = 400f;
+
+        public const int MaxWeight = 400;
         public float TotalWeight { set; get; }
-        public float CurrentWeight { set; get; }
+        public int CurrentWeight { set; get; }
         public int NumIdleTransport { set; get; }
         public int NumTransported { set; get; }
         public string Status { set; get; }
@@ -34,7 +35,7 @@ namespace ElevatorProject.Model
         public event Action AddFloor;
         public event Action CarryFloor;
         public event Action<int> EventOpenDoors;
-        public event Action UpdateTransported;
+        public event Action<int> UpdateTransported;
 
         public int GetCurrentFloor()
         {
@@ -62,7 +63,7 @@ namespace ElevatorProject.Model
                 }
                 else
                 {
-                    if (CurrentFloor == floor && ElevatorList[0] != floor)
+                    if (CurrentFloor == floor && ElevatorList[0] != floor && Status != "Signal Overload")
                     {
                         ElevatorList.Insert(0, floor);
                         FloorsInTheDirection++;
@@ -103,14 +104,14 @@ namespace ElevatorProject.Model
                                 {
                                     for (int i = FloorsInTheDirection; i < ElevatorList.Count; i++)
                                     {
-                                        if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
+                                        if (Math.Abs(ElevatorList[FloorsInTheDirection - 1] - ElevatorList[i]) > Math.Abs(ElevatorList[FloorsInTheDirection - 1] - floor))
                                         {
                                             ElevatorList.Insert(i, floor);
                                             flag = true;
                                             break;
                                         }
 
-                                        if (Math.Abs(CurrentFloor - ElevatorList[0]) == Math.Abs(CurrentFloor - floor))
+                                        if (ElevatorList[i] == floor)
                                         {
                                             flag = true;
                                             break;
@@ -148,8 +149,11 @@ namespace ElevatorProject.Model
         {
             Status = "Stand";
             UpdateStatus?.Invoke(Status);
-            Thread.Sleep(2000);
+            Thread.Sleep(2500);
             ElevatorList.RemoveAt(0);
+
+            FloorsInTheDirection = FloorsInTheDirection == 1 ? ElevatorList.Count : FloorsInTheDirection-1;
+
             EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
             OpenDoors();
         }
@@ -157,12 +161,12 @@ namespace ElevatorProject.Model
         {
             Status = "Open doors";
             UpdateStatus?.Invoke(Status);
-            Thread.Sleep(2000);
+            Thread.Sleep(2500);
             CheckMode();
         }
         public bool AddTime(Person person, int floor)
         {
-            StandTime = StandTime + (new Time(0, 5, 0, 0));
+            StandTime = StandTime + (new Time(0, 1, 0, 0));
             PersonsList.Add(person);
             CurrentWeight += person.Weight;
             CarryFloor += person.UpdateStatusFromElevator;
@@ -174,12 +178,12 @@ namespace ElevatorProject.Model
         private void CheckMode()
         {
             DataBase.IsClosed = false;
-            StandTime = new Time(DataBase.Time);
-            Time currentTime = new Time(0, 5, 0, 0);
+            StandTime = new Time(0, 2, 0, 0);
             Status = "Check mode";
             UpdateStatus?.Invoke(Status);
             if(!DataBase.Overload)
                 EventOpenDoors?.Invoke(CurrentFloor);
+            UpdateTransported?.Invoke(CurrentWeight);
             if (DataBase.IsClosed && CurrentWeight >= MaxWeight)
             {
                 DataBase.IsClosed = false;
@@ -188,7 +192,7 @@ namespace ElevatorProject.Model
             else if(!DataBase.IsClosed)
             {
                 DataBase.Overload = false;
-                Thread.Sleep((currentTime + StandTime - DataBase.Time).Ms + (currentTime + StandTime - DataBase.Time).Sec*1000);
+                Thread.Sleep(StandTime.Sec*1000);
             }
             CloseDoors();
         }
@@ -196,14 +200,14 @@ namespace ElevatorProject.Model
         {
             Status = "Signal Overload";
             UpdateStatus?.Invoke(Status);
-            Thread.Sleep(1000);
+            Thread.Sleep(2500);
             while (CurrentWeight > MaxWeight)
             {
                 CurrentWeight -= PersonsList[PersonsList.Count - 1].Weight;
                 PersonsList[PersonsList.Count - 1].Status = "Get off the elevator";
                 Thread.Sleep(1000);
                 PersonsList[PersonsList.Count - 1].Status = "Called the elevator";
-                ElevatorList.Add(CurrentFloor);
+                UpdateElevatorList(CurrentFloor, PersonsList[PersonsList.Count - 1].Status);
                 CarryFloor -= PersonsList[PersonsList.Count - 1].UpdateStatusFromElevator;
                 AddFloor -= PersonsList[PersonsList.Count - 1].AddFloor;
                 EventOpenDoors -= PersonsList[PersonsList.Count - 1].GetOffTheElevator;
@@ -219,7 +223,8 @@ namespace ElevatorProject.Model
         {
             Status = "Close doors";
             UpdateStatus?.Invoke(Status);
-            Thread.Sleep(2000);
+            Thread.Sleep(2500);
+            UpdateTransported?.Invoke(CurrentWeight);
             if (ElevatorList.Count == 0 && CurrentWeight == 0)
                 Wait();
             else if (CurrentWeight == 0)
@@ -273,7 +278,7 @@ namespace ElevatorProject.Model
             CarryFloor -= person.UpdateStatusFromElevator;
             AddFloor -= person.AddFloor;
             EventOpenDoors -= person.GetOffTheElevator;
-            UpdateTransported?.Invoke(); 
+            UpdateTransported?.Invoke(CurrentWeight); 
         }
     }
 }
