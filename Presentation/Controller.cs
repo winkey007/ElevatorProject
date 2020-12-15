@@ -1,6 +1,6 @@
 ﻿namespace ElevatorProject.Presentation
 {
-    class Class1
+    class Controller
     {
     }
 }

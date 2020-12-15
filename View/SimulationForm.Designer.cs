@@ -67,6 +67,7 @@ namespace ElevatorProject.View
             this.HeaderName = new System.Windows.Forms.Label();
             this.Logo = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.FloorsPlaceholder = new System.Windows.Forms.Label();
             this.LifetimeBox = new System.Windows.Forms.TextBox();
             this.FloorsPersonBox = new System.Windows.Forms.TextBox();
             this.LifetimeLabel = new System.Windows.Forms.Label();
@@ -80,7 +81,6 @@ namespace ElevatorProject.View
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.rightButton = new System.Windows.Forms.PictureBox();
             this.LeftButton = new System.Windows.Forms.PictureBox();
-            this.FloorsPlaceholder = new System.Windows.Forms.Label();
             this.StatusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StopStatusPic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OverloadStatusPic)).BeginInit();
@@ -225,7 +225,7 @@ namespace ElevatorProject.View
             this.StopStatusPic.Location = new System.Drawing.Point(532, 148);
             this.StopStatusPic.Name = "StopStatusPic";
             this.StopStatusPic.Size = new System.Drawing.Size(34, 34);
-            this.StopStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.StopStatusPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.StopStatusPic.TabIndex = 51;
             this.StopStatusPic.TabStop = false;
             this.StopStatusPic.Visible = false;
@@ -504,6 +504,16 @@ namespace ElevatorProject.View
             this.panel1.Size = new System.Drawing.Size(525, 243);
             this.panel1.TabIndex = 16;
             // 
+            // FloorsPlaceholder
+            // 
+            this.FloorsPlaceholder.AutoSize = true;
+            this.FloorsPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.FloorsPlaceholder.Location = new System.Drawing.Point(267, 168);
+            this.FloorsPlaceholder.Name = "FloorsPlaceholder";
+            this.FloorsPlaceholder.Size = new System.Drawing.Size(229, 17);
+            this.FloorsPlaceholder.TabIndex = 60;
+            this.FloorsPlaceholder.Text = "current / birthday / dectination";
+            // 
             // LifetimeBox
             // 
             this.LifetimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
@@ -641,16 +651,6 @@ namespace ElevatorProject.View
             this.LeftButton.TabIndex = 17;
             this.LeftButton.TabStop = false;
             this.LeftButton.Click += new System.EventHandler(this.LeftButton_Click);
-            // 
-            // FloorsPlaceholder
-            // 
-            this.FloorsPlaceholder.AutoSize = true;
-            this.FloorsPlaceholder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.FloorsPlaceholder.Location = new System.Drawing.Point(267, 168);
-            this.FloorsPlaceholder.Name = "FloorsPlaceholder";
-            this.FloorsPlaceholder.Size = new System.Drawing.Size(229, 17);
-            this.FloorsPlaceholder.TabIndex = 60;
-            this.FloorsPlaceholder.Text = "current / birthday / dectination";
             // 
             // SimulationForm
             // 

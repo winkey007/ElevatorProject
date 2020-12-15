@@ -20,9 +20,12 @@ namespace ElevatorProject.View
 
         private void CreatePersons(int num)
         {
-            for (int i = DataBase.NumPersons - num; i < DataBase.NumPersons; i++)
+            for (var i = DataBase.NumPersons - num; i < DataBase.NumPersons; i++)
             {
-                Person person = new Person(i);
+                var person = new Person(i);
+                if (_personList.All(t => t.CurrentFloor != person.CurrentFloor))
+                    AddPersonPic(person.CurrentFloor);
+
                 _personList.Add(person);
                 person.UpdateStatus += SetPersonStatus;
                 person.UpdateCurrentFloor += SetPersonFloor;
@@ -36,16 +39,15 @@ namespace ElevatorProject.View
                     _personList[j].Alone += person.Answer;
                 }
                 _elevator.EventOpenDoors += person.EnterTheElevator;
-
                 var task = new Task(() => person.CallTheElevator());
                 task.Start();
             }
         }
-        public void SetNumTransported(int Weight)
+        public void SetNumTransported(int weight)
         {
             NumPersonsBox.Invoke((MethodInvoker)(() => { NumPersonsBox.Text = _elevator.PersonsList.Count.ToString() + " / " + _elevator.NumTransported.ToString()
                                  .ToString() + " / " + (_personList.Count - _elevator.PersonsList.Count - _elevator.NumTransported); }));
-            WeightBox.Invoke((MethodInvoker)(() => { WeightBox.Text = Weight.ToString() + " / " + Elevator.MaxWeight.ToString(); }));
+            WeightBox.Invoke((MethodInvoker)(() => { WeightBox.Text = weight.ToString() + " / " + Elevator.MaxWeight.ToString(); }));
         }
         private void SetElevatorList(string status)
         {
@@ -57,10 +59,7 @@ namespace ElevatorProject.View
         }
         private void SetPersonFloor(string status)
         {
-            StatusBox.Invoke((MethodInvoker)(() =>
-            {
-                FloorsPersonBox.Text =
-                    status + FloorsPersonBox.Text.Substring((Convert.ToInt32(status) + DataBase.Direction).ToString().Length); }));
+            StatusBox.Invoke((MethodInvoker)(() => {FloorsPersonBox.Text = status + FloorsPersonBox.Text.Substring((Convert.ToInt32(status) + DataBase.Direction).ToString().Length); }));
         }
         private void CloseButton_MouseEnter(object sender, EventArgs e)
         {
@@ -102,6 +101,37 @@ namespace ElevatorProject.View
             _lastPoint = new Point(e.X, e.Y);
         }
 
+        private void AddPersonPic(int currentFloor)
+        {
+            PictureBox picture = new PictureBox
+            {
+                Image = Properties.Resources.human,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                TabStop = false,
+                Visible = true,
+                Height = DataBase.FloorLength < 30 ? Convert.ToInt32(0.9 * DataBase.FloorLength) : 30
+            };
+            picture.Width = Convert.ToInt32(picture.Height / DataBase.Scaller);
+            picture.Name = currentFloor.ToString() + "_FloorPersonPic";
+            picture.Location = new Point(0, ElevatorRoad.Height - ((currentFloor - 1) * DataBase.FloorLength + picture.Height));
+            picture.Cursor = Cursors.Hand;
+            ElevatorRoad.Controls.Add(picture);
+
+            TextBox text = new TextBox
+            {
+                BackColor = Color.FromArgb(152, 171, 247),
+                Font = new Font("Microsoft Sans Serif", picture.Height * 34/14f, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204))),
+                ForeColor = Color.Red,
+                Location = new Point(picture.Width + 5, picture.Location.Y),
+                Multiline = true,
+                Name = currentFloor.ToString() + "_FloorPersonBox",
+                ReadOnly = true,
+                Size = new Size(ElevatorRoad.Width-(CurrentFloorBox.Width + picture.Width + 15), picture.Height),
+                TextAlign = HorizontalAlignment.Center,
+                Cursor = Cursors.Hand
+            };
+            ElevatorRoad.Controls.Add(text);
+        }
         private void FinishButton_Click(object sender, EventArgs e)
         {
             if (_elevator.PersonsList.Count == 0)
@@ -120,8 +150,10 @@ namespace ElevatorProject.View
         }
         public void SetElevatorStatus(string status)
         {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
-            player.SoundLocation = Environment.CurrentDirectory + @"\..\..\sounds\";
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer
+            {
+                SoundLocation = Environment.CurrentDirectory + @"\..\..\Sounds\"
+            };
             StatusBox.Invoke((MethodInvoker)(() => {ElevatorBox.Text = status;}));
             switch (status)
             {
@@ -214,11 +246,9 @@ namespace ElevatorProject.View
 
             DataBase.Time.Ms = DataBase.Time.Ms + 1;
             TimeBox.Text = ShowTime(DataBase.Time);
-            if (_personList.Any())
-            {
-                Time time =  _personList[DataBase.CurrentId].DeathTime > new Time() ? _personList[DataBase.CurrentId].DeathTime : (DataBase.Time - _personList[DataBase.CurrentId].BirthdayTime);
-                LifetimeBox.Text = ShowTime(time);
-            }
+            if (!_personList.Any()) return;
+            var time =  _personList[DataBase.CurrentId].DeathTime > new Time() ? _personList[DataBase.CurrentId].DeathTime : (DataBase.Time - _personList[DataBase.CurrentId].BirthdayTime);
+            LifetimeBox.Text = ShowTime(time);
         }
 
         private string ShowTime(Time time)
@@ -300,20 +330,12 @@ namespace ElevatorProject.View
                 i = 0;
                 DataBase.CurrentId = i;
             }
-            if (_personList.Count != 0)
-            {
-                NameBox.Text = "Person " + _personList[i].Id;
-                StatusBox.Text = _personList[i].Status;
-                FloorsPersonBox.Text = _personList[i].CurrentFloor.ToString()+" / " + _personList[i].BirthdayFloor.ToString() + " / " + _personList[i].DestinationFloor.ToString();
-                LifetimeBox.Text = "00:00:00:0";
-            }
-            //else
-            //{
-            //    NameBox.Text = "-";
-            //    StatusBox.Text = "-";
-            //    CurrentFloorPersonBox.Text = "-";
-            //    LifetimeBox.Text = "-";
-            //}
+
+            if (_personList.Count == 0) return;
+            NameBox.Text = "Person " + _personList[i].Id;
+            StatusBox.Text = _personList[i].Status;
+            FloorsPersonBox.Text = _personList[i].CurrentFloor.ToString()+" / " + _personList[i].BirthdayFloor.ToString() + " / " + _personList[i].DestinationFloor.ToString();
+            LifetimeBox.Text = "00:00:00:0";
         }
 
         private void AddPersonImage(int CurrentFloor, int Id)
@@ -337,6 +359,7 @@ namespace ElevatorProject.View
                                  .ToString() + " / " + (_personList.Count - _elevator.PersonsList.Count - _elevator.NumTransported);
             ElevatorBox.Text = _elevator.Status;
             WeightBox.Text = "0 / " + Elevator.MaxWeight;
+            Person.random = new Random();
         }
 
     }

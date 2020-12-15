@@ -7,13 +7,13 @@ namespace ElevatorProject.Model
     {
         public Person(int id)
         {
-            BirthdayFloor = new Random().Next(1, DataBase.NumFloors + 1);
-            DestinationFloor = new Random().Next(1, DataBase.NumFloors + 1);
+            BirthdayFloor = random.Next(1, DataBase.NumFloors + 1);
+            DestinationFloor = random.Next(1, DataBase.NumFloors + 1);
             while (DestinationFloor == BirthdayFloor)
             {
-                DestinationFloor = new Random().Next(1, DataBase.NumFloors);
+                DestinationFloor = random.Next(1, DataBase.NumFloors);
             }
-            Weight = new Random().Next(40, 120);
+            Weight = random.Next(40, 120);
             BirthdayTime.Ms = DataBase.Time.Ms;           BirthdayTime.Sec = DataBase.Time.Sec;
             BirthdayTime.Min = DataBase.Time.Min;         BirthdayTime.H = DataBase.Time.H;
             Status = "Created";
@@ -29,6 +29,7 @@ namespace ElevatorProject.Model
         public int CurrentFloor { set; get; }
         public int Weight { set; get; }
         public string Status { set; get; }
+        public static Random random = new Random();
 
         public event Action Alone;
         public event Func<int> CheckFloor;
