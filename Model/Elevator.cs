@@ -36,6 +36,8 @@ namespace ElevatorProject.Model
         public event Action CarryFloor;
         public event Action<int> EventOpenDoors;
         public event Action<int> UpdateTransported;
+        public event Action<int> AddFloorList;
+        public event Action<int, int, bool> UpdateFloorList;
 
         public int GetCurrentFloor()
         {
@@ -55,6 +57,7 @@ namespace ElevatorProject.Model
                 {
                     ElevatorList.Add(floor);
                     FloorsInTheDirection++;
+                   // AddFloorList?.Invoke(floor);
                     EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
                     if (status == "Called the elevator")
                     {
@@ -122,7 +125,8 @@ namespace ElevatorProject.Model
                                 }
                                 break;
                         }
-                        EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
+                 //   AddFloorList?.Invoke(floor);
+                    EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
                     }
                     
                 }
@@ -213,6 +217,7 @@ namespace ElevatorProject.Model
                 EventOpenDoors -= PersonsList[PersonsList.Count - 1].GetOffTheElevator;
                 EventOpenDoors += PersonsList[PersonsList.Count - 1].EnterTheElevator;
                 PersonsList.RemoveAt(PersonsList.Count - 1);
+                UpdateFloorList?.Invoke(PersonsList[PersonsList.Count - 1].CurrentFloor, PersonsList[PersonsList.Count - 1].Id, true);
             }
 
             DataBase.IsClosed = false;
