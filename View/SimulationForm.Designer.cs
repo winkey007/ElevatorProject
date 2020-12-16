@@ -300,6 +300,7 @@ namespace ElevatorProject.View
             // NumPersonsBox
             // 
             this.NumPersonsBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(161)))), ((int)(((byte)(179)))));
+            this.NumPersonsBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.NumPersonsBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.NumPersonsBox.Location = new System.Drawing.Point(330, 87);
             this.NumPersonsBox.Multiline = true;

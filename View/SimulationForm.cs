@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ElevatorProject.Model;
@@ -16,6 +17,8 @@ namespace ElevatorProject.View
         {
             InitializeComponent();
             _elevator = new Elevator();
+           // for (int i = 0; i < DataBase.NumFloors; i++)
+            //    AddPersonList(i);
         }
 
         private void CreatePersons(int num)
@@ -23,9 +26,9 @@ namespace ElevatorProject.View
             for (var i = DataBase.NumPersons - num; i < DataBase.NumPersons; i++)
             {
                 var person = new Person(i);
-                if (_personList.All(t => t.CurrentFloor != person.CurrentFloor))
-                    AddPersonPic(person.CurrentFloor);
-
+               // if (_personList.All(t => t.CurrentFloor != person.CurrentFloor))
+               //     AddPersonList(person.CurrentFloor);
+                UpdateFloorList(person.CurrentFloor,person.Id,true);
                 _personList.Add(person);
                 person.UpdateStatus += SetPersonStatus;
                 person.UpdateCurrentFloor += SetPersonFloor;
@@ -33,12 +36,14 @@ namespace ElevatorProject.View
                 person.Entered += _elevator.AddTime;
                 person.Transported += _elevator.Transported;
                 person.CheckFloor += _elevator.GetCurrentFloor;
+                person.UpdateFloorList += UpdateFloorList;
                 for (int j = 0; j < _personList.Count - 1; j++)
                 {
                     person.Alone += _personList[j].Answer;
                     _personList[j].Alone += person.Answer;
                 }
                 _elevator.EventOpenDoors += person.EnterTheElevator;
+
                 var task = new Task(() => person.CallTheElevator());
                 task.Start();
             }
@@ -101,36 +106,65 @@ namespace ElevatorProject.View
             _lastPoint = new Point(e.X, e.Y);
         }
 
-        private void AddPersonPic(int currentFloor)
+        private void AddPersonList(int currentFloor)
         {
+            //if (ElevatorRoad.Controls[currentFloor.ToString() + "_FloorPersonBox"] != null)
+           //     return;
             PictureBox picture = new PictureBox
             {
                 Image = Properties.Resources.human,
                 SizeMode = PictureBoxSizeMode.Zoom,
                 TabStop = false,
-                Visible = true,
+                Visible = false,
                 Height = DataBase.FloorLength < 30 ? Convert.ToInt32(0.9 * DataBase.FloorLength) : 30
             };
             picture.Width = Convert.ToInt32(picture.Height / DataBase.Scaller);
             picture.Name = currentFloor.ToString() + "_FloorPersonPic";
             picture.Location = new Point(0, ElevatorRoad.Height - ((currentFloor - 1) * DataBase.FloorLength + picture.Height));
-            picture.Cursor = Cursors.Hand;
+            picture.Cursor = Cursors.Default;
             ElevatorRoad.Controls.Add(picture);
 
             TextBox text = new TextBox
             {
                 BackColor = Color.FromArgb(152, 171, 247),
-                Font = new Font("Microsoft Sans Serif", picture.Height * 34/14f, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204))),
+                Font = new Font("Microsoft Sans Serif", picture.Height*14/34f, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204))),
                 ForeColor = Color.Red,
                 Location = new Point(picture.Width + 5, picture.Location.Y),
                 Multiline = true,
+                Visible = false,
                 Name = currentFloor.ToString() + "_FloorPersonBox",
                 ReadOnly = true,
                 Size = new Size(ElevatorRoad.Width-(CurrentFloorBox.Width + picture.Width + 15), picture.Height),
                 TextAlign = HorizontalAlignment.Center,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.IBeam
             };
             ElevatorRoad.Controls.Add(text);
+        }
+
+        private void UpdateFloorList(int currentFloor, int id, bool add)
+        {
+            Control box = ElevatorRoad.Controls[currentFloor.ToString() + "_FloorPersonBox"];
+            if (add)
+            {
+                if (!box.Visible)
+                {
+                    Control pic = ElevatorRoad.Controls[currentFloor.ToString() + "_FloorPersonPic"];
+                    box.Invoke((MethodInvoker)(() => { box.Visible = true; }));
+                    pic.Invoke((MethodInvoker)(() => { pic.Visible = true; }));
+                }
+                box.Invoke((MethodInvoker)(() => { box.Text = id.ToString() + " " + box.Text; }));
+            }
+            else
+            {
+                if (box.Text == id.ToString() + " ")
+                {
+                    Control pic = ElevatorRoad.Controls[currentFloor.ToString() + "_FloorPersonPic"];
+                    box.Invoke((MethodInvoker)(() => { box.Text = ""; }));
+                    box.Invoke((MethodInvoker)(() => { box.Visible = false; }));
+                    pic.Invoke((MethodInvoker)(() => { pic.Visible = false; }));
+                }
+                box.Invoke((MethodInvoker)(() => { box.Text = box.Text.Replace(id.ToString() + " ", ""); }));
+            }
         }
         private void FinishButton_Click(object sender, EventArgs e)
         {
@@ -213,6 +247,7 @@ namespace ElevatorProject.View
         public void MoveFloor()
         {
             DataBase.CurrentHeight = DataBase.HeightFloor;
+            DataBase.CurrentLength = DataBase.FloorLength;
         }
 
         private void rightButton_Click(object sender, EventArgs e)
@@ -234,8 +269,9 @@ namespace ElevatorProject.View
         {
             if (DataBase.CurrentHeight > 0)
             {
-                CurrentFloorBox.Location = new Point(CurrentFloorBox.Location.X, CurrentFloorBox.Location.Y + DataBase.Direction * DataBase.FloorLength / DataBase.HeightFloor);
-                ElevatorPic.Location = new Point(ElevatorPic.Location.X, ElevatorPic.Location.Y + DataBase.Direction * DataBase.FloorLength / DataBase.HeightFloor);
+                CurrentFloorBox.Location = new Point(CurrentFloorBox.Location.X, CurrentFloorBox.Location.Y + DataBase.Direction * DataBase.CurrentLength / DataBase.CurrentHeight);
+                ElevatorPic.Location = new Point(ElevatorPic.Location.X, ElevatorPic.Location.Y + DataBase.Direction * DataBase.CurrentLength / DataBase.CurrentHeight);
+                DataBase.CurrentLength -= DataBase.CurrentLength / DataBase.CurrentHeight;
                 DataBase.CurrentHeight--;
             }
             else if (DataBase.CurrentHeight == 0)
@@ -350,7 +386,11 @@ namespace ElevatorProject.View
             _elevator.UpdateStatus += SetElevatorStatus;
             _elevator.UpdateTransported += SetNumTransported;
             _elevator.EventUpdateElevatorList += SetElevatorList;
+            _elevator.UpdateFloorList += UpdateFloorList;
+            _elevator.AddFloorList += AddPersonList;
             DataBase.CurrentId = 0; DataBase.Id = 0;
+            for (int i = 0; i <= DataBase.NumFloors; i++)
+                   AddPersonList(i);
             CreatePersons(DataBase.NumPersons);
             ShowPeople(DataBase.CurrentId);
             CurrentFloorBox.Text = _elevator.CurrentFloor.ToString();
