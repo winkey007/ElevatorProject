@@ -37,6 +37,7 @@ namespace ElevatorProject.Model
         public event Action<string> UpdateCurrentFloor;
         public event Action<int,string> UpdateElevatorList;
         public event Func<Person,int,bool> Entered;
+        public event Action<int, int, bool> UpdateFloorList;
         public event Action<Person> Transported;
 
         public void CallTheElevator()
@@ -52,7 +53,8 @@ namespace ElevatorProject.Model
             {
                 Status = "Entered the elevator";
                 if (DataBase.CurrentId == Id)
-                    UpdateStatus?.Invoke(Status);         
+                    UpdateStatus?.Invoke(Status);     
+                UpdateFloorList?.Invoke(CurrentFloor,Id,false);
                 Thread.Sleep(1000);
                 if (Entered != null && !Entered(this, DestinationFloor))
                     ChooseFloor();
@@ -93,10 +95,12 @@ namespace ElevatorProject.Model
             {
                 Status = "Get off the elevator";
                 if (DataBase.CurrentId == Id)
-                    UpdateStatus?.Invoke(Status);   
+                    UpdateStatus?.Invoke(Status);
+                UpdateFloorList?.Invoke(CurrentFloor, Id, true);
                 Transported?.Invoke(this);
                 Thread.Sleep(5000);
                 Status = "Deleted";
+                UpdateFloorList?.Invoke(CurrentFloor, Id, false);
                 DeathTime = DataBase.Time - BirthdayTime;
                 if (DataBase.CurrentId == Id)
                     UpdateStatus?.Invoke(Status);
