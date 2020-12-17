@@ -396,7 +396,7 @@ namespace ElevatorProject.View
             // 
             // ElevatorRoad
             // 
-            this.ElevatorRoad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(71)))), ((int)(((byte)(247)))));
+            this.ElevatorRoad.BackColor = System.Drawing.Color.LightCyan;
             this.ElevatorRoad.Controls.Add(this.CurrentFloorBox);
             this.ElevatorRoad.Controls.Add(this.ElevatorPic);
             this.ElevatorRoad.Dock = System.Windows.Forms.DockStyle.Left;
@@ -407,10 +407,10 @@ namespace ElevatorProject.View
             // 
             // CurrentFloorBox
             // 
-            this.CurrentFloorBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(71)))), ((int)(((byte)(247)))));
+            this.CurrentFloorBox.BackColor = System.Drawing.Color.LightCyan;
             this.CurrentFloorBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.CurrentFloorBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CurrentFloorBox.ForeColor = System.Drawing.Color.Red;
+            this.CurrentFloorBox.ForeColor = System.Drawing.Color.Blue;
             this.CurrentFloorBox.Location = new System.Drawing.Point(148, 689);
             this.CurrentFloorBox.Multiline = true;
             this.CurrentFloorBox.Name = "CurrentFloorBox";
@@ -616,7 +616,7 @@ namespace ElevatorProject.View
             // timer
             // 
             this.timer.Enabled = true;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
             // ErrorLabel
             // 
@@ -639,7 +639,7 @@ namespace ElevatorProject.View
             this.rightButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.rightButton.TabIndex = 18;
             this.rightButton.TabStop = false;
-            this.rightButton.Click += new System.EventHandler(this.rightButton_Click);
+            this.rightButton.Click += new System.EventHandler(this.RightButton_Click);
             // 
             // LeftButton
             // 

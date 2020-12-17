@@ -121,11 +121,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\call.png" />
+    <None Include="Images\carrying.png" />
     <Content Include="Images\check.png" />
     <Content Include="Images\close.png" />
     <Content Include="Images\down.png" />
     <Content Include="Images\elevator.png" />
     <Content Include="Images\floors.png" />
+    <None Include="Images\man.png" />
     <Content Include="sounds\call0.wav" />
     <Content Include="sounds\call1.wav" />
     <Content Include="sounds\call2.wav" />

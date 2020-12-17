@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace ElevatorProject.Model
@@ -13,7 +14,7 @@ namespace ElevatorProject.Model
             {
                 DestinationFloor = random.Next(1, DataBase.NumFloors);
             }
-            Weight = random.Next(40, 120);
+            Weight = random.Next(DataBase.MinPersonWeight, DataBase.MaxPersonWeight);
             BirthdayTime.Ms = DataBase.Time.Ms;           BirthdayTime.Sec = DataBase.Time.Sec;
             BirthdayTime.Min = DataBase.Time.Min;         BirthdayTime.H = DataBase.Time.H;
             Status = "Created";
@@ -34,6 +35,7 @@ namespace ElevatorProject.Model
         public event Action Alone;
         public event Func<int> CheckFloor;
         public event Action<string> UpdateStatus;
+        public event Action UpdateWeight;
         public event Action<string> UpdateCurrentFloor;
         public event Action<int,string> UpdateElevatorList;
         public event Func<Person,int,bool> Entered;
@@ -47,19 +49,19 @@ namespace ElevatorProject.Model
                 UpdateStatus?.Invoke(Status);                
             UpdateElevatorList?.Invoke(BirthdayFloor,Status); 
         }
-        public void EnterTheElevator(int floor)
+        public void EnterTheElevator(int floor, Elevator elevator)
         {
-            if(CurrentFloor == floor && Status == "Called the elevator")
-            {
-                Status = "Entered the elevator";
-                if (DataBase.CurrentId == Id)
-                    UpdateStatus?.Invoke(Status);     
-                UpdateFloorList?.Invoke(CurrentFloor,Id,false);
-                Thread.Sleep(1000);
-                if (Entered != null && !Entered(this, DestinationFloor))
-                    ChooseFloor();
-                Check();
-            }
+            if (CurrentFloor != floor || Status != "Called the elevator" ||
+                elevator.CurrentWeight > DataBase.MaxElevatorWeight) return;
+            Status = "Entered the elevator";
+            UpdateWeight?.Invoke();
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status);     
+            UpdateFloorList?.Invoke(CurrentFloor,Id,false);
+            Thread.Sleep(1000);
+            if (Entered != null && !Entered(this, DestinationFloor))
+                ChooseFloor();
+            Check();
         }
         private void Check()
         {
@@ -91,20 +93,15 @@ namespace ElevatorProject.Model
         }
         public void GetOffTheElevator(int floor)
         {
-            if(DestinationFloor == floor && (Status == "Moving up" || Status == "Moving down"))
-            {
-                Status = "Get off the elevator";
-                if (DataBase.CurrentId == Id)
-                    UpdateStatus?.Invoke(Status);
-                UpdateFloorList?.Invoke(CurrentFloor, Id, true);
-                Transported?.Invoke(this);
-                Thread.Sleep(5000);
-                Status = "Deleted";
-                UpdateFloorList?.Invoke(CurrentFloor, Id, false);
-                DeathTime = DataBase.Time - BirthdayTime;
-                if (DataBase.CurrentId == Id)
-                    UpdateStatus?.Invoke(Status);
-            }
+            if (DestinationFloor != floor || (Status != "Moving up" && Status != "Moving down")) return;
+            Status = "Get off the elevator";
+            UpdateWeight?.Invoke();
+            if (DataBase.CurrentId == Id)
+                UpdateStatus?.Invoke(Status); 
+            UpdateFloorList?.Invoke(CurrentFloor, Id, true);
+            Transported?.Invoke(this);
+            DataBase.GetOffPersons.Add(new GetOffPerson(Id,50));
+            Thread.Sleep(1000);
         }
         public void UpdateStatusFromElevator()
         {

@@ -17,7 +17,6 @@ namespace ElevatorProject.Model
             FloorsInTheDirection = 0;
         }
 
-        public const int MaxWeight = 400;
         public float TotalWeight { set; get; }
         public int CurrentWeight { set; get; }
         public int NumIdleTransport { set; get; }
@@ -34,14 +33,19 @@ namespace ElevatorProject.Model
         public event Action MoveFloor;
         public event Action AddFloor;
         public event Action CarryFloor;
-        public event Action<int> EventOpenDoors;
-        public event Action<int> UpdateTransported;
-        public event Action<int> AddFloorList;
+        public event Action<int, Elevator> EventOpenDoors;
+        public event Action<int> EventOpenDoorsForExit;
+        public event Action<int> EventUpdateCurrentWeight;
         public event Action<int, int, bool> UpdateFloorList;
 
         public int GetCurrentFloor()
         {
             return CurrentFloor;
+        }
+
+        public void UpdateCurrentWeight()
+        {
+            EventUpdateCurrentWeight?.Invoke(CurrentWeight);
         }
         public Result SendResult(Result result)
         {
@@ -53,84 +57,88 @@ namespace ElevatorProject.Model
         public void UpdateElevatorList(int floor, string status)
         {
             bool flag = false;
-                if (!ElevatorList.Any())
+            if (ElevatorList.Any())
+            {
+                if (CurrentFloor == floor && ElevatorList[0] != floor && Status != "Signal Overload")
                 {
-                    ElevatorList.Add(floor);
+                    ElevatorList.Insert(0, floor);
                     FloorsInTheDirection++;
-                   // AddFloorList?.Invoke(floor);
-                    EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
-                    if (status == "Called the elevator")
-                    {
-                        GoEmtyToCall();
-                    }
                 }
                 else
                 {
-                    if (CurrentFloor == floor && ElevatorList[0] != floor && Status != "Signal Overload")
+                    switch ((Math.Sign(CurrentFloor - ElevatorList[0]) == Math.Sign(CurrentFloor - floor)) ||
+                            (Math.Sign(CurrentFloor - ElevatorList[0]) == 0 && ElevatorList.Count > 1 &&
+                             Math.Sign(CurrentFloor - ElevatorList[1]) == Math.Sign(CurrentFloor - floor)))
                     {
-                        ElevatorList.Insert(0, floor);
-                        FloorsInTheDirection++;
-                    }
-                    else
-                    {
-                        switch ((Math.Sign(CurrentFloor - ElevatorList[0]) == Math.Sign(CurrentFloor - floor)) || (Math.Sign(CurrentFloor - ElevatorList[0]) == 0 && ElevatorList.Count > 1 && Math.Sign(CurrentFloor - ElevatorList[1]) == Math.Sign(CurrentFloor - floor)))
-                        {
-                            case true:
-                                for (int i = 0; i < FloorsInTheDirection; i++)
+                        case true:
+                            for (int i = 0; i < FloorsInTheDirection; i++)
+                            {
+                                if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
                                 {
-                                    if (Math.Abs(CurrentFloor - ElevatorList[i]) > Math.Abs(CurrentFloor - floor))
+                                    ElevatorList.Insert(i, floor);
+                                    FloorsInTheDirection++;
+                                    flag = true;
+                                    break;
+                                }
+
+                                if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
+                                {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+
+                            if (!flag)
+                            {
+                                ElevatorList.Insert(FloorsInTheDirection, floor);
+                                FloorsInTheDirection++;
+                            }
+
+                            break;
+                        case false:
+                            if (ElevatorList.Count == FloorsInTheDirection)
+                            {
+                                ElevatorList.Insert(FloorsInTheDirection, floor);
+                            }
+                            else
+                            {
+                                for (int i = FloorsInTheDirection; i < ElevatorList.Count; i++)
+                                {
+                                    if (Math.Abs(ElevatorList[FloorsInTheDirection - 1] - ElevatorList[i]) >
+                                        Math.Abs(ElevatorList[FloorsInTheDirection - 1] - floor))
                                     {
                                         ElevatorList.Insert(i, floor);
-                                        FloorsInTheDirection++;
                                         flag = true;
                                         break;
                                     }
 
-                                    if (Math.Abs(CurrentFloor - ElevatorList[i]) == Math.Abs(CurrentFloor - floor))
+                                    if (ElevatorList[i] == floor)
                                     {
                                         flag = true;
                                         break;
                                     }
                                 }
+
                                 if (!flag)
-                                {
-                                    ElevatorList.Insert(FloorsInTheDirection, floor);
-                                    FloorsInTheDirection++;
-                                }
-                                break;
-                            case false:
-                                if (ElevatorList.Count == FloorsInTheDirection)
-                                {
-                                    ElevatorList.Insert(FloorsInTheDirection, floor);
-                                }
-                                else
-                                {
-                                    for (int i = FloorsInTheDirection; i < ElevatorList.Count; i++)
-                                    {
-                                        if (Math.Abs(ElevatorList[FloorsInTheDirection - 1] - ElevatorList[i]) > Math.Abs(ElevatorList[FloorsInTheDirection - 1] - floor))
-                                        {
-                                            ElevatorList.Insert(i, floor);
-                                            flag = true;
-                                            break;
-                                        }
+                                    ElevatorList.Insert(ElevatorList.Count, floor);
+                            }
 
-                                        if (ElevatorList[i] == floor)
-                                        {
-                                            flag = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!flag)
-                                        ElevatorList.Insert(ElevatorList.Count, floor);
-                                }
-                                break;
-                        }
-                 //   AddFloorList?.Invoke(floor);
-                    EventUpdateElevatorList?.Invoke(String.Join(" ", ElevatorList));
+                            break;
                     }
-                    
-                }
 
+                    EventUpdateElevatorList?.Invoke(string.Join(" ", ElevatorList));
+                }
+            }
+            else
+            {
+                ElevatorList.Add(floor);
+                FloorsInTheDirection++;
+                EventUpdateElevatorList?.Invoke(string.Join(" ", ElevatorList));
+                if (status == "Called the elevator")
+                {
+                    GoEmtyToCall();
+                }
+            }
         }
         private void GoEmtyToCall()
         {
@@ -170,11 +178,11 @@ namespace ElevatorProject.Model
         }
         public bool AddTime(Person person, int floor)
         {
-            StandTime = StandTime + (new Time(0, 1, 0, 0));
+            StandTime += (new Time(0, 1, 0, 0));
             PersonsList.Add(person);
             CurrentWeight += person.Weight;
             CarryFloor += person.UpdateStatusFromElevator;
-            EventOpenDoors += person.GetOffTheElevator;
+            EventOpenDoorsForExit += person.GetOffTheElevator;
             EventOpenDoors -= person.EnterTheElevator;
             AddFloor += person.AddFloor;
             return ElevatorList.Exists(x => x == floor);
@@ -185,39 +193,42 @@ namespace ElevatorProject.Model
             StandTime = new Time(0, 2, 0, 0);
             Status = "Check mode";
             UpdateStatus?.Invoke(Status);
-            if(!DataBase.Overload)
-                EventOpenDoors?.Invoke(CurrentFloor);
-            UpdateTransported?.Invoke(CurrentWeight);
-            if (DataBase.IsClosed && CurrentWeight >= MaxWeight)
+            if (!DataBase.Overload)
             {
-                DataBase.IsClosed = false;
-                Signal();
+                EventOpenDoorsForExit?.Invoke(CurrentFloor);
+                EventOpenDoors?.Invoke(CurrentFloor, this);
             }
-            else if(!DataBase.IsClosed)
+            EventUpdateCurrentWeight?.Invoke(CurrentWeight);
+
+            if(!DataBase.IsClosed)
             {
                 DataBase.Overload = false;
                 Thread.Sleep(StandTime.Sec*1000);
             }
-            CloseDoors();
+            if (CurrentWeight > DataBase.MaxElevatorWeight)
+                Signal();
+            else
+                CloseDoors();
         }
         private void Signal()
         {
             Status = "Signal Overload";
             UpdateStatus?.Invoke(Status);
             Thread.Sleep(2500);
-            while (CurrentWeight > MaxWeight)
+            while (CurrentWeight > DataBase.MaxElevatorWeight)
             {
                 CurrentWeight -= PersonsList[PersonsList.Count - 1].Weight;
                 PersonsList[PersonsList.Count - 1].Status = "Get off the elevator";
                 Thread.Sleep(1000);
                 PersonsList[PersonsList.Count - 1].Status = "Called the elevator";
                 UpdateElevatorList(CurrentFloor, PersonsList[PersonsList.Count - 1].Status);
+                UpdateCurrentWeight();
                 CarryFloor -= PersonsList[PersonsList.Count - 1].UpdateStatusFromElevator;
                 AddFloor -= PersonsList[PersonsList.Count - 1].AddFloor;
-                EventOpenDoors -= PersonsList[PersonsList.Count - 1].GetOffTheElevator;
+                EventOpenDoorsForExit -= PersonsList[PersonsList.Count - 1].GetOffTheElevator;
                 EventOpenDoors += PersonsList[PersonsList.Count - 1].EnterTheElevator;
+                UpdateFloorList?.Invoke(CurrentFloor, PersonsList[PersonsList.Count - 1].Id, true);
                 PersonsList.RemoveAt(PersonsList.Count - 1);
-                UpdateFloorList?.Invoke(PersonsList[PersonsList.Count - 1].CurrentFloor, PersonsList[PersonsList.Count - 1].Id, true);
             }
 
             DataBase.IsClosed = false;
@@ -229,14 +240,14 @@ namespace ElevatorProject.Model
             Status = "Close doors";
             UpdateStatus?.Invoke(Status);
             Thread.Sleep(2500);
-            UpdateTransported?.Invoke(CurrentWeight);
+            EventUpdateCurrentWeight?.Invoke(CurrentWeight);
             if (ElevatorList.Count == 0 && CurrentWeight == 0)
                 Wait();
             else if (CurrentWeight == 0)
                 GoEmtyToCall();
             else if (ElevatorList[0] > CurrentFloor)
                 CarryUp();
-            else if(ElevatorList[0] < CurrentFloor)
+            else if (ElevatorList[0] < CurrentFloor)
                 CarryDown();
         }
         private void CarryUp()
@@ -282,8 +293,8 @@ namespace ElevatorProject.Model
             TotalWeight += person.Weight;
             CarryFloor -= person.UpdateStatusFromElevator;
             AddFloor -= person.AddFloor;
-            EventOpenDoors -= person.GetOffTheElevator;
-            UpdateTransported?.Invoke(CurrentWeight); 
+            EventOpenDoorsForExit -= person.GetOffTheElevator;
+            EventUpdateCurrentWeight?.Invoke(CurrentWeight); 
         }
     }
 }
